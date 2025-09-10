@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flappy Chairman</title>
+<title>Flappy Bird But Worse</title>
 <style>
   body { margin: 0; overflow: hidden; font-family: 'Poppins', sans-serif; background: #f0f2f5; }
   #gameCanvas { display: block; background: linear-gradient(to bottom, #87ceeb, #f0f2f5); }
@@ -19,6 +19,10 @@
     text-align: center;
     z-index: 2;
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
 
   #menu h1 {
@@ -30,9 +34,9 @@
   }
   @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-  #menu label { font-size: 18px; font-weight: 500; display: block; margin-bottom: 8px; color: #555; }
+  #menu label { font-size: 18px; font-weight: 500; display: block; margin-bottom: 4px; color: #555; }
   select, button {
-    margin-top: 10px;
+    margin-top: 5px;
     padding: 12px 18px;
     font-size: 16px;
     border-radius: 10px;
@@ -83,19 +87,43 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     z-index: 2;
   }
+
+  #charPreviewBox {
+    margin-top: 10px;
+    display: block;
+  }
+
+  #charPreviewBox img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid #ccc;
+    background: white;
+  }
 </style>
 </head>
 <body>
 
 <div id="menu">
-  <h1>Flappy Chairman</h1>
+  <h1>Flappy Bird But Worse</h1>
   <label>Select Character</label>
   <select id="character">
     <option value="Mao.png">🇨🇳 Chairman Mao</option>
-    <option value="Jinping.png">🇨🇳 Chairman Jijinping</option>
+    <option value="Jinping.png">🇨🇳 Chairman Xi jinping</option>
     <option value="Kim.png">🇰🇵 Kim Jong Un</option>
     <option value="Trump.png">🇺🇸 Trump</option>
+    <option value="Nyancat.png">Nyan Cat</option>
+    <option value="Teto.png">Teto Plush</option>
+    <option value="Plane.png">Plane</option>
+    <option value="Honda.png">2006 Honda Civic</option>
+    <option value="Roaring.png">Roaring Knight</option>
   </select>
+
+  <div id="charPreviewBox">
+    <img id="charPreview" src="Mao.png" alt="Character Preview">
+  </div>
+
   <label>Select Difficulty</label>
   <select id="difficulty">
     <option value="normal">Normal</option>
@@ -114,11 +142,11 @@
 <canvas id="gameCanvas"></canvas>
 
 <script>
-// ---- ORIGINAL GAME LOGIC BELOW ----
+// ---- GAME LOGIC ----
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let backgroundImg = new Image(); backgroundImg.src = "flag.jpg";
+let backgroundImg = new Image();
 let characterImg = new Image();
 let topPipeImg = new Image(); topPipeImg.src = "tube2.png";
 let bottomPipeImg = new Image(); bottomPipeImg.src = "tube.png";
@@ -126,7 +154,7 @@ let gameOverImg = new Image(); gameOverImg.src = "game_over.png";
 
 const flapSound = new Audio("flap.mp3");
 const hitSound = new Audio("hit.mp3");
-const bgMusic = new Audio("Music.mp3"); bgMusic.loop = true;
+let bgMusic; // will assign dynamically
 
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
@@ -138,8 +166,8 @@ let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
 
-// Difficulty settings
-let pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180;
+// Difficulty
+let pipeGap = 0.4; let pipeSpeed = 3; let pipeInterval = 180;
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
@@ -154,7 +182,25 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 function startGame(){
-  characterImg.src = document.getElementById("character").value;
+  const character = document.getElementById("character").value;
+  characterImg.src = character;
+
+  // stop any old music
+  if (bgMusic) {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+  }
+
+  // special case: Roaring Knight
+  if (character === "Roaring.png") {
+    bgMusic = new Audio("roaring.mp3");
+    backgroundImg.src = "roaring_bg.png";
+  } else {
+    bgMusic = new Audio("Music.mp3");
+    backgroundImg.src = "Background.png";
+  }
+  bgMusic.loop = true;
+
   const difficulty = document.getElementById("difficulty").value;
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
@@ -163,9 +209,12 @@ function startGame(){
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
+  document.getElementById("charPreviewBox").style.display = "none";
+
   resetGame();
   if(!isMuted) bgMusic.play();
   gameInterval = setInterval(update, 20);
+
   document.addEventListener("keydown", function(event) {
     if (event.code === "Space") { event.preventDefault(); flap(); }
   });
@@ -182,6 +231,7 @@ document.getElementById("playAgainBtn").addEventListener("click", ()=>{
   document.getElementById("playAgainBtn").style.display = "none";
   document.getElementById("menu").style.display = "flex";
   document.getElementById("creditBox").style.display = "flex";
+  document.getElementById("charPreviewBox").style.display = "block";
 });
 
 function resetGame(){
@@ -291,7 +341,7 @@ function triggerGameOver(){
   if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
 }
 
-// SECRET JUMPSCARE (\ key)
+// SECRET
 window.addEventListener("keydown", (e) => {
   if(e.key === "\\"){
     const img = new Image();
@@ -304,8 +354,11 @@ window.addEventListener("keydown", (e) => {
   }
   if(e.key.toLowerCase() === "f") showHitboxes = !showHitboxes;
 });
+
+// Character preview updates instantly
+document.getElementById("character").addEventListener("change", (e)=>{
+  document.getElementById("charPreview").src = e.target.value;
+});
 </script>
 </body>
 </html>
-
-
