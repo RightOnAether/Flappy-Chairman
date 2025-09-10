@@ -7,6 +7,7 @@
 <style>
   body { margin: 0; overflow: hidden; font-family: sans-serif; }
   #gameCanvas { display: block; }
+
   #menu {
     position: absolute;
     top: 50%;
@@ -18,13 +19,13 @@
     text-align: center;
     z-index: 2;
   }
+
   #menu h1 { margin: 0 0 20px; font-size: 48px; animation: float 2s ease-in-out infinite; }
   @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
   #menu label { font-size: 20px; display: block; margin-bottom: 10px; }
-  select, button {
-    margin-top: 10px; padding: 10px 14px; font-size: 16px;
-    border-radius: 6px; border: 1px solid #ccc;
-  }
+  select, button { margin-top: 10px; padding: 10px 14px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
+
   #muteBtn, #playAgainBtn {
     position: absolute; padding: 10px 14px; font-size: 16px;
     border-radius: 6px; border: 1px solid #ccc; background: rgba(255,255,255,0.9);
@@ -32,19 +33,42 @@
   }
   #muteBtn { bottom: 10px; left: 10px; }
   #playAgainBtn { bottom: 60px; left: 50%; transform: translateX(-50%); display: none; }
+
   #hitboxText {
     position: absolute; bottom: 10px; left: 50%;
     transform: translateX(-50%); font-size: 20px; color: black; z-index: 2;
   }
+
+  #creditBox {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    aspect-ratio: 1 / 1;
+    border: 2px solid black;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+    z-index: 2;
+  }
 </style>
 </head>
 <body>
+
 <div id="menu">
   <h1>Flappy Chairman</h1>
   <label>Select Character</label>
   <select id="character">
-    <option value="Mao.png">Chairman Mao</option>
-    <option value="Jinping.png">Chairman Jijinping</option>
+    <option value="Mao.png">🇨🇳 Chairman Mao</option>
+    <option value="Jinping.png">🇨🇳 Chairman Jijinping</option>
+    <option value="Kim.png">🇰🇵 Kim Jong Un</option>
+    <option value="Trump.png">🇺🇸 Trump</option>
   </select>
   <label>Select Difficulty</label>
   <select id="difficulty">
@@ -56,6 +80,8 @@
 </div>
 
 <div id="hitboxText">Want a challenge? Press F to hide Hitboxes!</div>
+<div id="creditBox">Idea by Aether<br>Made by AI</div>
+
 <button id="muteBtn">Mute</button>
 <button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
@@ -108,9 +134,10 @@ function startGame(){
   const difficulty = document.getElementById("difficulty").value;
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 9; pipeInterval = 100; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 9; pipeInterval = 60; } // more tubes
 
   document.getElementById("menu").style.display = "none";
+  document.getElementById("creditBox").style.display = "none"; // hide credit during gameplay
   resetGame();
   if(!isMuted) bgMusic.play();
   gameInterval = setInterval(update, 20);
@@ -126,9 +153,8 @@ document.getElementById("muteBtn").addEventListener("click", ()=>{
 
 document.getElementById("playAgainBtn").addEventListener("click", ()=>{
   document.getElementById("playAgainBtn").style.display = "none";
-  resetGame();
-  if(!isMuted) bgMusic.play();
-  gameInterval = setInterval(update, 20);
+  document.getElementById("menu").style.display = "flex"; // show menu again
+  document.getElementById("creditBox").style.display = "flex"; // show credit again
 });
 
 function resetGame(){
