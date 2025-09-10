@@ -143,7 +143,13 @@ function startGame(){
   resetGame();
   if(!isMuted) bgMusic.play();
   gameInterval = setInterval(update, 20);
-  window.addEventListener("keydown", flap);
+  document.addEventListener("keydown", function(event) {
+    if (event.code === "Space") {
+      // prevent page from scrolling when space is pressed
+      event.preventDefault();  
+      flap()
+    }
+  });
   canvas.addEventListener("click", flap);
 }
 
@@ -301,4 +307,5 @@ window.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
+
 
