@@ -5,14 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flappy Chairman</title>
 <style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    font-family: sans-serif;
-  }
-  #gameCanvas {
-    display: block;
-  }
+  body { margin: 0; overflow: hidden; font-family: sans-serif; }
+  #gameCanvas { display: block; }
   #menu {
     position: absolute;
     top: 50%;
@@ -24,55 +18,23 @@
     text-align: center;
     z-index: 2;
   }
-  #menu h1 {
-    margin: 0 0 20px;
-    font-size: 48px;
-    animation: float 2s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
-  #menu label {
-    font-size: 20px;
-    display: block;
-    margin-bottom: 10px;
-  }
+  #menu h1 { margin: 0 0 20px; font-size: 48px; animation: float 2s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+  #menu label { font-size: 20px; display: block; margin-bottom: 10px; }
   select, button {
-    margin-top: 10px;
-    padding: 10px 14px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    margin-top: 10px; padding: 10px 14px; font-size: 16px;
+    border-radius: 6px; border: 1px solid #ccc;
   }
   #muteBtn, #playAgainBtn {
-    position: absolute;
-    padding: 10px 14px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: rgba(255,255,255,0.9);
-    cursor: pointer;
-    z-index: 3;
+    position: absolute; padding: 10px 14px; font-size: 16px;
+    border-radius: 6px; border: 1px solid #ccc; background: rgba(255,255,255,0.9);
+    cursor: pointer; z-index: 3;
   }
-  #muteBtn {
-    bottom: 10px;
-    left: 10px;
-  }
-  #playAgainBtn {
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: none;
-  }
+  #muteBtn { bottom: 10px; left: 10px; }
+  #playAgainBtn { bottom: 60px; left: 50%; transform: translateX(-50%); display: none; }
   #hitboxText {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 20px;
-    color: black;
-    z-index: 2;
+    position: absolute; bottom: 10px; left: 50%;
+    transform: translateX(-50%); font-size: 20px; color: black; z-index: 2;
   }
 </style>
 </head>
@@ -83,13 +45,17 @@
   <select id="character">
     <option value="Mao.png">Chairman Mao</option>
     <option value="Jinping.png">Chairman Jijinping</option>
+  </select>
+  <label>Select Difficulty</label>
+  <select id="difficulty">
+    <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+    <option value="extreme">Extreme</option>
   </select><br>
   <button onclick="startGame()">Play</button>
 </div>
-  
+
 <div id="hitboxText">Want a challenge? Press F to hide Hitboxes!</div>
-
-
 <button id="muteBtn">Mute</button>
 <button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
@@ -98,20 +64,15 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let backgroundImg = new Image();
-backgroundImg.src = "flag.jpg";
+let backgroundImg = new Image(); backgroundImg.src = "flag.jpg";
 let characterImg = new Image();
-let topPipeImg = new Image();
-let bottomPipeImg = new Image();
-let gameOverImg = new Image();
-topPipeImg.src = "tube2.png";
-bottomPipeImg.src = "tube.png";
-gameOverImg.src = "game_over.png";
+let topPipeImg = new Image(); topPipeImg.src = "tube2.png";
+let bottomPipeImg = new Image(); bottomPipeImg.src = "tube.png";
+let gameOverImg = new Image(); gameOverImg.src = "game_over.png";
 
 const flapSound = new Audio("flap.mp3");
 const hitSound = new Audio("hit.mp3");
-const bgMusic = new Audio("Music.mp3");
-bgMusic.loop = true;
+const bgMusic = new Audio("Music.mp3"); bgMusic.loop = true;
 
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
@@ -122,6 +83,10 @@ let gameInterval;
 let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
+
+// Difficulty settings
+let pipeGap = 0.4;      // proportion of canvas height
+let pipeSpeed = 3;      // pixels per frame
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
@@ -138,6 +103,12 @@ resizeCanvas();
 function startGame(){
   const chosen = document.getElementById("character").value;
   characterImg.src = chosen;
+
+  const difficulty = document.getElementById("difficulty").value;
+  if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; }
+  if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 9; }
+
   document.getElementById("menu").style.display = "none";
   resetGame();
   if(!isMuted) bgMusic.play();
@@ -202,7 +173,6 @@ function drawScore(){
   ctx.fillStyle = "black";
   ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
   ctx.fillText("Score: " + score, 10, canvas.height * 0.08);
-
   ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
   ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.08 + 40);
 }
@@ -222,13 +192,12 @@ function update(){
     }
 
     if(frame % 180 === 0){
-      let gap = canvas.height * 0.4;
-      let topHeight = Math.random() * (canvas.height - gap - 100) + 50;
-      pipes.push({ x: canvas.width, width: canvas.width * 0.12, top: topHeight, bottom: canvas.height - topHeight - gap, scored: false });
+      let topHeight = Math.random() * (canvas.height - pipeGap*canvas.height - 100) + 50;
+      pipes.push({ x: canvas.width, width: canvas.width * 0.12, top: topHeight, bottom: canvas.height - topHeight - pipeGap*canvas.height, scored: false });
     }
 
     pipes.forEach(pipe => {
-      pipe.x -= 3;
+      pipe.x -= pipeSpeed;
       if(bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x){
         if(bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom){
           hitSound.currentTime = 0;
@@ -298,10 +267,8 @@ window.addEventListener("keydown", (e) => {
       location.reload();
     }, 1000); // 1 second
   }
-  // Toggle hitboxes with F
   if(e.key.toLowerCase() === "f") showHitboxes = !showHitboxes;
 });
 </script>
 </body>
 </html>
-
