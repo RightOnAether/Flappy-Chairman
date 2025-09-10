@@ -57,6 +57,23 @@
     background: rgba(255,255,255,0.9);
     z-index: 2;
   }
+
+  #leaderboard {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+    padding: 15px;
+    border: 2px solid black;
+    border-radius: 20px; /* Rounded rectangle */
+    background: rgba(255,255,255,0.9);
+    font-size: 14px;
+    z-index: 2;
+    text-align: center;
+  }
+  #leaderboard h3 { margin: 0 0 10px 0; }
+  #leaderboard p { margin: 5px 0; }
 </style>
 </head>
 <body>
@@ -82,6 +99,15 @@
 
 <div id="hitboxText">Want a challenge? Press F to hide Hitboxes!</div>
 <div id="creditBox">Idea by Aether<br>Made by AI</div>
+
+<div id="leaderboard">
+  <h3>🏆Leaderboard🏆</h3>
+  <p>🏅User1: ?</p>
+  <p>🥈User2: ?</p>
+  <p>🥉User3: ?</p>
+  <p>⭐User4  ?</p>
+  <p>⭐User5  ?</p>
+</div>
 
 <button id="muteBtn">Mute</button>
 <button id="playAgainBtn">Play Again</button>
@@ -112,9 +138,9 @@ let isMuted = false;
 let showHitboxes = true;
 
 // Difficulty settings
-let pipeGap = 0.4;      // proportion of canvas height
-let pipeSpeed = 3;      // pixels per frame
-let pipeInterval = 180; // frames between pipes
+let pipeGap = 0.4;
+let pipeSpeed = 3;
+let pipeInterval = 180;
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
@@ -136,10 +162,10 @@ function startGame(){
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "extreme") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 45; }
-  if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 67; pipeInterval = 20; } // SIX SEVENNN
+  if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 67; pipeInterval = 20; }
 
   document.getElementById("menu").style.display = "none";
-  document.getElementById("creditBox").style.display = "none"; // hide credit during gameplay
+  document.getElementById("creditBox").style.display = "none";
   resetGame();
   if(!isMuted) bgMusic.play();
   gameInterval = setInterval(update, 20);
@@ -155,8 +181,8 @@ document.getElementById("muteBtn").addEventListener("click", ()=>{
 
 document.getElementById("playAgainBtn").addEventListener("click", ()=>{
   document.getElementById("playAgainBtn").style.display = "none";
-  document.getElementById("menu").style.display = "flex"; // show menu again
-  document.getElementById("creditBox").style.display = "flex"; // show credit again
+  document.getElementById("menu").style.display = "flex";
+  document.getElementById("creditBox").style.display = "flex";
 });
 
 function resetGame(){
@@ -301,5 +327,3 @@ window.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
-
-
