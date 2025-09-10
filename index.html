@@ -176,7 +176,7 @@ function resizeCanvas(){
   bird.height = bird.width;
   bird.x = canvas.width * 0.15;
   bird.gravity = 0.5 * (canvas.height/600);
-  bird.lift = -9.5 * (canvas.height/600);
+  bird.lift = -8 * (canvas.height/600);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -417,3 +417,4 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
