@@ -75,6 +75,7 @@
     <option value="normal">Normal</option>
     <option value="hard">Hard</option>
     <option value="extreme">Extreme</option>
+    <option value="impossible">Literally Impossible</option>
   </select><br>
   <button onclick="startGame()">Play</button>
 </div>
@@ -133,8 +134,9 @@ function startGame(){
 
   const difficulty = document.getElementById("difficulty").value;
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 5; pipeInterval = 100; }
-  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 67; } // SIX SEVENNNN
+  if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 9; pipeInterval = 60; }
+  if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 67; pipeInterval = 20; } // Literally Impossible
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none"; // hide credit during gameplay
@@ -299,5 +301,3 @@ window.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
-
-
