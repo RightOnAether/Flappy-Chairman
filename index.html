@@ -135,7 +135,7 @@ function startGame(){
   const difficulty = document.getElementById("difficulty").value;
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "extreme") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 67; }
+  if(difficulty === "extreme") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 45; }
   if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 67; pipeInterval = 20; } // SIX SEVENNN
 
   document.getElementById("menu").style.display = "none";
@@ -301,4 +301,5 @@ window.addEventListener("keydown", (e) => {
 </script>
 </body>
 </html>
+
 
