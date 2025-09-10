@@ -148,8 +148,8 @@ const ctx = canvas.getContext("2d");
 
 let backgroundImg = new Image();
 let characterImg = new Image();
-let topPipeImg = new Image(); topPipeImg.src = "tube2.png";
-let bottomPipeImg = new Image(); bottomPipeImg.src = "tube.png";
+let topPipeImg = new Image();
+let bottomPipeImg = new Image();
 let gameOverImg = new Image(); gameOverImg.src = "game_over.png";
 
 const flapSound = new Audio("flap.mp3");
@@ -190,9 +190,13 @@ function startGame(){
   if (character === "Roaring.png") {
     bgMusic = new Audio("roaring.mp3");
     backgroundImg.src = "roaring_bg.png";
+    topPipeImg.src = "roaring_top_pipe.png";
+    bottomPipeImg.src = "roaring_bottom_pipe.png";
   } else {
     bgMusic = new Audio("Music.mp3");
     backgroundImg.src = "Background.png";
+    topPipeImg.src = "tube2.png";
+    bottomPipeImg.src = "tube.png";
   }
   bgMusic.loop = true;
 
@@ -340,7 +344,7 @@ function triggerGameOver(){
 window.addEventListener("keydown", (e) => {
   if(e.key === "\\"){
     const password = prompt("Enter dev panel password:");
-    if(password === "letmein"){ // change this password as needed
+    if(password === "letmein"){ 
       openDevPanel();
     } else if(password !== null){
       alert("Incorrect password!");
