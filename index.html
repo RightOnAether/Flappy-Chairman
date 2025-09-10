@@ -198,7 +198,15 @@ function update(){
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
 
+    // bottom kill box
     if(bird.y + bird.height > canvas.height){
+      hitSound.currentTime = 0;
+      hitSound.play();
+      triggerGameOver();
+    }
+
+    // top kill box
+    if(bird.y < 0){
       hitSound.currentTime = 0;
       hitSound.play();
       triggerGameOver();
