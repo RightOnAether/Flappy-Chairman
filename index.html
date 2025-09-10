@@ -134,6 +134,7 @@
   <button onclick="startGame()">Play</button>
 </div>
 
+<div id="hitboxText">Want a challenge? Press F to hide Hitboxes!</div>
 <div id="creditBox">Idea by Aether<br>Made by AI</div>
 
 <button id="muteBtn">Mute</button>
@@ -153,7 +154,7 @@ let gameOverImg = new Image(); gameOverImg.src = "game_over.png";
 
 const flapSound = new Audio("flap.mp3");
 const hitSound = new Audio("hit.mp3");
-let bgMusic; // will assign dynamically
+let bgMusic;
 
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
@@ -184,13 +185,8 @@ function startGame(){
   const character = document.getElementById("character").value;
   characterImg.src = character;
 
-  // stop any old music
-  if (bgMusic) {
-    bgMusic.pause();
-    bgMusic.currentTime = 0;
-  }
+  if (bgMusic) { bgMusic.pause(); bgMusic.currentTime = 0; }
 
-  // special case: Roaring Knight
   if (character === "Roaring.png") {
     bgMusic = new Audio("roaring.mp3");
     backgroundImg.src = "roaring_bg.png";
@@ -340,19 +336,75 @@ function triggerGameOver(){
   if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
 }
 
-// SECRET
+// DEV PANEL
 window.addEventListener("keydown", (e) => {
   if(e.key === "\\"){
-    const img = new Image();
-    img.src = "Unused_Pres.png";
-    img.style.position = "fixed"; img.style.top = "0"; img.style.left = "0";
-    img.style.width = "100%"; img.style.height = "100%"; img.style.zIndex = "9999";
-    document.body.appendChild(img);
-    const scareSound = new Audio("unused.mp3"); scareSound.play();
-    setTimeout(() => { document.body.removeChild(img); location.reload(); }, 1000);
+    const password = prompt("Enter dev panel password:");
+    if(password === "letmein"){ // change this password as needed
+      openDevPanel();
+    } else if(password !== null){
+      alert("Incorrect password!");
+    }
   }
   if(e.key.toLowerCase() === "f") showHitboxes = !showHitboxes;
 });
+
+function openDevPanel(){
+  const panel = document.createElement("div");
+  panel.style.position = "fixed";
+  panel.style.top = "50%";
+  panel.style.left = "50%";
+  panel.style.transform = "translate(-50%, -50%)";
+  panel.style.background = "rgba(0,0,0,0.9)";
+  panel.style.color = "white";
+  panel.style.padding = "30px";
+  panel.style.borderRadius = "15px";
+  panel.style.zIndex = "9999";
+  panel.style.textAlign = "center";
+
+  panel.innerHTML = `
+    <h2>Dev Panel</h2>
+    <label>Score: <input type="number" id="devScore" value="${score}" style="width:60px;"></label>
+    <button id="setScore">Set</button><br><br>
+    <label>High Score: <input type="number" id="devHighScore" value="${highScore}" style="width:60px;"></label>
+    <button id="setHighScore">Set</button><br><br>
+    <label>Pipe Speed: <input type="number" id="devPipeSpeed" value="${pipeSpeed}" style="width:60px;"></label>
+    <button id="setPipeSpeed">Set</button><br><br>
+    <label>Pipe Gap (0-1): <input type="number" id="devPipeGap" value="${pipeGap}" step="0.01" style="width:60px;"></label>
+    <button id="setPipeGap">Set</button><br><br>
+    <button id="resetHighScore">Reset High Score</button><br><br>
+    <button id="closeDevPanel">Close</button>
+  `;
+
+  document.body.appendChild(panel);
+
+  document.getElementById("setScore").addEventListener("click", () => {
+    score = parseInt(document.getElementById("devScore").value) || 0;
+  });
+
+  document.getElementById("setHighScore").addEventListener("click", () => {
+    highScore = parseInt(document.getElementById("devHighScore").value) || 0;
+    localStorage.setItem("highScore", highScore);
+  });
+
+  document.getElementById("setPipeSpeed").addEventListener("click", () => {
+    pipeSpeed = parseFloat(document.getElementById("devPipeSpeed").value) || 3;
+  });
+
+  document.getElementById("setPipeGap").addEventListener("click", () => {
+    pipeGap = parseFloat(document.getElementById("devPipeGap").value) || 0.4;
+  });
+
+  document.getElementById("resetHighScore").addEventListener("click", () => {
+    localStorage.setItem("highScore", "0");
+    highScore = 0;
+    alert("High Score reset!");
+  });
+
+  document.getElementById("closeDevPanel").addEventListener("click", () => {
+    document.body.removeChild(panel);
+  });
+}
 
 // Character preview updates instantly
 document.getElementById("character").addEventListener("change", (e)=>{
