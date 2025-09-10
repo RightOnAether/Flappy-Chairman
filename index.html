@@ -104,7 +104,7 @@ bgMusic.loop = true;
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
 let score = 0;
-let highScore = 0;
+let highScore = parseInt(localStorage.getItem("highScore")) || 0; // load from localStorage
 let frame = 0;
 let gameInterval;
 let isGameOver = false;
@@ -205,8 +205,8 @@ function update(){
       triggerGameOver();
     }
 
-    // top kill box
-    if(bird.y < 0){
+    // top kill box 25px above screen
+    if(bird.y < -25){
       hitSound.currentTime = 0;
       hitSound.play();
       triggerGameOver();
@@ -264,7 +264,10 @@ function triggerGameOver(){
   isGameOver = true;
   clearInterval(gameInterval);
   bgMusic.pause();
-  if(score > highScore) highScore = score;
+  if(score > highScore) {
+    highScore = score;
+    localStorage.setItem("highScore", highScore); // save to localStorage
+  }
 }
 </script>
 </body>
