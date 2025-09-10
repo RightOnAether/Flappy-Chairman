@@ -158,9 +158,9 @@ function startGame(){
 
   const difficulty = document.getElementById("difficulty").value;
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "extreme") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 45; }
-  if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 67; pipeInterval = 20; }
+if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 4; pipeInterval = 160; }
+if(difficulty === "extreme") { pipeGap = 0.35; pipeSpeed = 8; pipeInterval = 100; }
+if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 12; pipeInterval = 90; }
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
@@ -282,3 +282,4 @@ document.getElementById("muteBtn").addEventListener("click",()=>{
 </script>
 </body>
 </html>
+
