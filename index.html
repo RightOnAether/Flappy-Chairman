@@ -87,6 +87,7 @@ let showHitboxes = true;
 // Difficulty settings
 let pipeGap = 0.4;      // proportion of canvas height
 let pipeSpeed = 3;      // pixels per frame
+let pipeInterval = 180; // frames between pipes
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
@@ -105,9 +106,9 @@ function startGame(){
   characterImg.src = chosen;
 
   const difficulty = document.getElementById("difficulty").value;
-  if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; }
-  if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; }
-  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 9; }
+  if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 9; pipeInterval = 100; }
 
   document.getElementById("menu").style.display = "none";
   resetGame();
@@ -191,7 +192,7 @@ function update(){
       triggerGameOver();
     }
 
-    if(frame % 180 === 0){
+    if(frame % pipeInterval === 0){
       let topHeight = Math.random() * (canvas.height - pipeGap*canvas.height - 100) + 50;
       pipes.push({ x: canvas.width, width: canvas.width * 0.12, top: topHeight, bottom: canvas.height - topHeight - pipeGap*canvas.height, scored: false });
     }
