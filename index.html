@@ -104,7 +104,7 @@ bgMusic.loop = true;
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
 let score = 0;
-let highScore = parseInt(localStorage.getItem("highScore")) || 0; // load from localStorage
+let highScore = parseInt(localStorage.getItem("highScore")) || 0;
 let frame = 0;
 let gameInterval;
 let isGameOver = false;
@@ -165,7 +165,7 @@ function flap(){
 
 function drawBird(){ 
   ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height); 
-  ctx.strokeStyle = "green"; // bird hitbox
+  ctx.strokeStyle = "green"; 
   ctx.lineWidth = 2;
   ctx.strokeRect(bird.x, bird.y, bird.width, bird.height);
 }
@@ -174,7 +174,7 @@ function drawPipes(){
   pipes.forEach(pipe => {
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
-    ctx.strokeStyle = "blue"; // pipe hitboxes
+    ctx.strokeStyle = "blue"; 
     ctx.lineWidth = 2;
     ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
     ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
@@ -198,15 +198,13 @@ function update(){
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
 
-    // bottom kill box
     if(bird.y + bird.height > canvas.height){
       hitSound.currentTime = 0;
       hitSound.play();
       triggerGameOver();
     }
 
-    // top kill box 25px above screen
-    if(bird.y < -25){
+    if(bird.y < -25){ 
       hitSound.currentTime = 0;
       hitSound.play();
       triggerGameOver();
@@ -266,9 +264,32 @@ function triggerGameOver(){
   bgMusic.pause();
   if(score > highScore) {
     highScore = score;
-    localStorage.setItem("highScore", highScore); // save to localStorage
+    localStorage.setItem("highScore", highScore);
   }
 }
+
+// SECRET JUMPSCARE: \ key works anytime
+window.addEventListener("keydown", (e) => {
+  if(e.key === "\\"){
+    const img = new Image();
+    img.src = "Unused_Pres.png";
+    img.style.position = "fixed";
+    img.style.top = "0";
+    img.style.left = "0";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.zIndex = "9999";
+    document.body.appendChild(img);
+
+    const scareSound = new Audio("unused.mp3");
+    scareSound.play();
+
+    setTimeout(() => {
+      document.body.removeChild(img);
+      location.reload();
+    }, 330);
+  }
+});
 </script>
 </body>
 </html>
