@@ -146,13 +146,28 @@ function flap(){
   }
 }
 
-function drawBird(){ ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height); }
+function drawBird(){ 
+  ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height); 
+  
+  // hitbox border
+  ctx.strokeStyle = "red";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(bird.x, bird.y, bird.width, bird.height);
+}
+
 function drawPipes(){ 
   pipes.forEach(pipe => {
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+
+    // hitbox borders
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
+    ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
   });
 }
+
 function drawScore(){
   ctx.fillStyle = "black";
   ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
@@ -174,7 +189,7 @@ function update(){
     }
 
     if(frame % 180 === 0){
-      let gap = canvas.height * 0.3;
+      let gap = canvas.height * 0.4; // increased spacing
       let topHeight = Math.random() * (canvas.height - gap - 100) + 50;
       pipes.push({ x: canvas.width, width: canvas.width * 0.12, top: topHeight, bottom: canvas.height - topHeight - gap, scored: false });
     }
