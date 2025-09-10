@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Desmos | Graphing Calculator</title>
+<title>Flappy Chairman</title>
 <style>
   body {
     margin: 0;
@@ -45,17 +45,25 @@
     border-radius: 6px;
     border: 1px solid #ccc;
   }
-  #muteBtn {
+  #muteBtn, #playAgainBtn {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
     padding: 10px 14px;
     font-size: 16px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.9);
     cursor: pointer;
     z-index: 3;
+  }
+  #muteBtn {
+    bottom: 10px;
+    left: 10px;
+  }
+  #playAgainBtn {
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
   }
 </style>
 </head>
@@ -71,6 +79,7 @@
 </div>
 
 <button id="muteBtn">Mute</button>
+<button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
 
 <script>
@@ -129,6 +138,13 @@ document.getElementById("muteBtn").addEventListener("click", ()=>{
   else if(!isGameOver) bgMusic.play();
 });
 
+document.getElementById("playAgainBtn").addEventListener("click", ()=>{
+  document.getElementById("playAgainBtn").style.display = "none";
+  resetGame();
+  if(!isMuted) bgMusic.play();
+  gameInterval = setInterval(update, 20);
+});
+
 function resetGame(){
   bird.y = canvas.height * 0.25;
   bird.velocity = 0;
@@ -149,7 +165,7 @@ function flap(){
 function drawBird(){ 
   ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height); 
   
-  // hitbox border
+  // green hitbox border
   ctx.strokeStyle = "green";
   ctx.lineWidth = 2;
   ctx.strokeRect(bird.x, bird.y, bird.width, bird.height);
@@ -160,7 +176,7 @@ function drawPipes(){
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
 
-    // hitbox borders
+    // blue hitbox borders
     ctx.strokeStyle = "blue";
     ctx.lineWidth = 2;
     ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
@@ -228,6 +244,8 @@ function update(){
     ctx.fillStyle = "white";
     ctx.font = `${Math.floor(canvas.width*0.05)}px sans-serif`;
     ctx.fillText("Final Score: " + score, canvas.width*0.25, canvas.height*0.75);
+
+    document.getElementById("playAgainBtn").style.display = "block";
   }
 
   frame++;
@@ -238,9 +256,7 @@ function triggerGameOver(){
   isGameOver = true;
   clearInterval(gameInterval);
   bgMusic.pause();
-  setTimeout(()=>{ location.reload(); }, 10000);
 }
 </script>
 </body>
 </html>
-
