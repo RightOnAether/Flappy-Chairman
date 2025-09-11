@@ -183,8 +183,9 @@
   <strong>Current Update Changes:</strong>
   <ul>
     <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
-    <li>Pipe speed increases every 10th score and shows a "Golden Pipe" when you're about to speed up.</li>
+    <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
     <li>Flap power is now 9.</li>
+    <li>Press F to toggle hitbox borders.</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
@@ -269,6 +270,7 @@ function startGame(){
 
   document.addEventListener("keydown", function(event) {
     if (event.code === "Space") { event.preventDefault(); flap(); }
+    if (event.code === "KeyF") { showHitboxes = !showHitboxes; }
   });
   canvas.addEventListener("click", flap);
 }
@@ -312,7 +314,7 @@ function drawBird(){
 }
 
 function drawPipes(){ 
-  pipes.forEach((pipe, index) => {
+  pipes.forEach(pipe => {
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
 
@@ -412,4 +414,3 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
-
