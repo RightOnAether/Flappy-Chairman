@@ -184,6 +184,7 @@
   <strong>Current Update Changes:</strong>
   <ul>
     <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
+    <li>Also increased the Flap Power by 1 since i found it difficult to go higher from the bottom. (Was 8, Now 9)</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
@@ -228,8 +229,8 @@ function resizeCanvas(){
   bird.width = canvas.width * 0.06;
   bird.height = bird.width;
   bird.x = canvas.width * 0.15;
-  bird.gravity = 0.5 * (canvas.height/600);
-  bird.lift = -8 * (canvas.height/600);
+  bird.gravity = 0.525 * (canvas.height/600);
+  bird.lift = -9 * (canvas.height/600);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -400,3 +401,4 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
