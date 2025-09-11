@@ -178,13 +178,12 @@
 <button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
 
-<!-- Changes Button and Overlay -->
 <button id="changesBtn">📜</button>
 <div id="changesOverlay">
   <strong>Current Update Changes:</strong>
   <ul>
     <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
-    <li>Pipe speed increases every 10th score and shows "Speed UP!"</li>
+    <li>Pipe speed increases every 10th score and shows "Speed UP!" above score.</li>
     <li>Flap power is now 9.</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
@@ -231,7 +230,7 @@ function resizeCanvas(){
   bird.height = bird.width;
   bird.x = canvas.width * 0.15;
   bird.gravity = 0.5 * (canvas.height/600);
-  bird.lift = -9 * (canvas.height/600); // updated flap power
+  bird.lift = -9 * (canvas.height/600);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -330,9 +329,9 @@ function drawScore(){
   const isRoaring = document.getElementById("character").value === "Roaring.png";
   ctx.fillStyle = isRoaring ? "white" : "black";
   ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
-  ctx.fillText("Score: " + score, 10, canvas.height * 0.08);
+  ctx.fillText("Score: " + score, 10, canvas.height * 0.15);
   ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
-  ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.08 + 40);
+  ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.15 + 40);
 }
 
 function drawSpeedUp(){
@@ -340,7 +339,7 @@ function drawSpeedUp(){
     ctx.fillStyle = "yellow";
     ctx.font = `${Math.floor(canvas.width * 0.06)}px sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText("Speed UP!", canvas.width/2, canvas.height*0.1);
+    ctx.fillText("Speed UP!", canvas.width/2, canvas.height*0.08);
     speedUpTimer--;
   }
 }
@@ -375,7 +374,7 @@ function update(){
 
         if(score % 10 === 0){
           pipeSpeed += 0.5;
-          speedUpTimer = 100; // ~2 seconds
+          speedUpTimer = 100;
         }
       }
     });
@@ -385,8 +384,8 @@ function update(){
 
   drawPipes();
   drawBird();
-  drawScore();
   drawSpeedUp();
+  drawScore();
 
   if(isGameOver){
     ctx.fillStyle = "rgba(0,0,0,0.5)";
