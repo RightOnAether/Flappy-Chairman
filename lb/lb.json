@@ -8,10 +8,12 @@
   "Extreme": [
     { "name": "Sam", "score": 106},
     { "name": "Kevin", "score": 79},
+    { "name": "Tony", "score": 65},
     { "name": "Rolando", "score": 43 },
     { "name": "Sovit", "score": 23 }
   ],
   "Literally Impossible": [
     { "name": "Kevin", "score": 6 }
+    { "name": "Zed", "score": 5 }
   ]
 }
