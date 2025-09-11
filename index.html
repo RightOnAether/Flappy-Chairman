@@ -101,6 +101,43 @@
     border: 2px solid #ccc;
     background: white;
   }
+
+  #changesBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 26px;
+    padding: 10px 14px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 4;
+  }
+  #changesOverlay {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 9999;
+    display: none;
+    max-width: 90%;
+    font-size: 16px;
+  }
+  #changesOverlay button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #ff4c4c;
+    color: white;
+  }
 </style>
 </head>
 <body>
@@ -141,7 +178,23 @@
 <button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
 
+<!-- Changes Button and Overlay -->
+<button id="changesBtn">📜</button>
+<div id="changesOverlay">
+  <strong>Current Update Changes:</strong>
+  <ul>
+    <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
+  </ul>
+  <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
+</div>
+
 <script>
+// Show/Hide changes overlay
+document.getElementById('changesBtn').addEventListener('click', ()=>{
+  const overlay = document.getElementById('changesOverlay');
+  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+});
+
 // ---- GAME LOGIC ----
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -271,7 +324,8 @@ function drawPipes(){
 }
 
 function drawScore(){
-  ctx.fillStyle = "black";
+  const isRoaring = document.getElementById("character").value === "Roaring.png";
+  ctx.fillStyle = isRoaring ? "white" : "black";
   ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
   ctx.fillText("Score: " + score, 10, canvas.height * 0.08);
   ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
@@ -322,7 +376,7 @@ function update(){
     const imgHeight = imgWidth * (gameOverImg.height / gameOverImg.width || 0.5);
     ctx.drawImage(gameOverImg, (canvas.width - imgWidth)/2, canvas.height*0.3 - imgHeight/2, imgWidth, imgHeight);
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = document.getElementById("character").value === "Roaring.png" ? "white" : "white";
     ctx.font = `${Math.floor(canvas.width*0.05)}px sans-serif`;
     ctx.fillText("Final Score: " + score, canvas.width*0.25, canvas.height*0.75);
 
@@ -340,82 +394,9 @@ function triggerGameOver(){
   if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
 }
 
-// DEV PANEL
-window.addEventListener("keydown", (e) => {
-  if(e.key === "\\"){
-    const password = prompt("Enter dev panel password:");
-    if(password === "letmein"){ 
-      openDevPanel();
-    } else if(password !== null){
-      alert("Incorrect password!");
-    }
-  }
-  if(e.key.toLowerCase() === "f") showHitboxes = !showHitboxes;
-});
-
-function openDevPanel(){
-  const panel = document.createElement("div");
-  panel.style.position = "fixed";
-  panel.style.top = "50%";
-  panel.style.left = "50%";
-  panel.style.transform = "translate(-50%, -50%)";
-  panel.style.background = "rgba(0,0,0,0.9)";
-  panel.style.color = "white";
-  panel.style.padding = "30px";
-  panel.style.borderRadius = "15px";
-  panel.style.zIndex = "9999";
-  panel.style.textAlign = "center";
-
-  panel.innerHTML = `
-    <h2>Dev Panel</h2>
-    <label>Score: <input type="number" id="devScore" value="${score}" style="width:60px;"></label>
-    <button id="setScore">Set</button><br><br>
-    <label>High Score: <input type="number" id="devHighScore" value="${highScore}" style="width:60px;"></label>
-    <button id="setHighScore">Set</button><br><br>
-    <label>Pipe Speed: <input type="number" id="devPipeSpeed" value="${pipeSpeed}" style="width:60px;"></label>
-    <button id="setPipeSpeed">Set</button><br><br>
-    <label>Pipe Gap (0-1): <input type="number" id="devPipeGap" value="${pipeGap}" step="0.01" style="width:60px;"></label>
-    <button id="setPipeGap">Set</button><br><br>
-    <button id="resetHighScore">Reset High Score</button><br><br>
-    <button id="closeDevPanel">Close</button>
-  `;
-
-  document.body.appendChild(panel);
-
-  document.getElementById("setScore").addEventListener("click", () => {
-    score = parseInt(document.getElementById("devScore").value) || 0;
-  });
-
-  document.getElementById("setHighScore").addEventListener("click", () => {
-    highScore = parseInt(document.getElementById("devHighScore").value) || 0;
-    localStorage.setItem("highScore", highScore);
-  });
-
-  document.getElementById("setPipeSpeed").addEventListener("click", () => {
-    pipeSpeed = parseFloat(document.getElementById("devPipeSpeed").value) || 3;
-  });
-
-  document.getElementById("setPipeGap").addEventListener("click", () => {
-    pipeGap = parseFloat(document.getElementById("devPipeGap").value) || 0.4;
-  });
-
-  document.getElementById("resetHighScore").addEventListener("click", () => {
-    localStorage.setItem("highScore", "0");
-    highScore = 0;
-    alert("High Score reset!");
-  });
-
-  document.getElementById("closeDevPanel").addEventListener("click", () => {
-    document.body.removeChild(panel);
-  });
-}
-
-// Character preview updates instantly
 document.getElementById("character").addEventListener("change", (e)=>{
   document.getElementById("charPreview").src = e.target.value;
 });
 </script>
 </body>
 </html>
-
-
