@@ -186,6 +186,7 @@
     <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
     <li>Flap power is now 9.</li>
     <li>Press F to toggle hitbox borders.</li>
+    <li>Made "Literally Impossible" Slightly Possible.</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
@@ -258,7 +259,7 @@ function startGame(){
   if(difficulty === "normal") { pipeGap = 0.4; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "hard") { pipeGap = 0.3; pipeSpeed = 3; pipeInterval = 180; }
   if(difficulty === "extreme") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 45; }
-  if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 5; }
+  if(difficulty === "impossible") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 10; }
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
@@ -414,3 +415,4 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
