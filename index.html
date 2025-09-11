@@ -185,9 +185,10 @@
   <ul>
     <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
     <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
-    <li>Flap power is now 9.</li>
+    <li>Flap power is now 9.25.</li>
     <li>Press F to toggle hitbox borders.</li>
     <li>Made "Literally Impossible" Slightly Possible.</li>
+    <li>NEW CHARACTER: BALDI!</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
@@ -232,7 +233,7 @@ function resizeCanvas(){
   bird.height = bird.width;
   bird.x = canvas.width * 0.15;
   bird.gravity = 0.5 * (canvas.height/600);
-  bird.lift = -9.5 * (canvas.height/600);
+  bird.lift = -9.25 * (canvas.height/600);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -416,6 +417,7 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
 
 
 
