@@ -1,15 +1,15 @@
 {
   "Normal": [
-    { "name": "Sam", "score": 31 }
+    { "name": "Sam", "score": 31 },
     { "name": "Somethin", "score": 14 }
   ],
   "Hard": [
     { "name": "BA", "score": 86 }
   ],
   "Extreme": [
-    { "name": "Sam", "score": 106},
-    { "name": "Somethin", "score": 79},
-    { "name": "Aether", "score": 71},
+    { "name": "Sam", "score": 106 },
+    { "name": "Somethin", "score": 79 },
+    { "name": "Aether", "score": 71 },
     { "name": "Rolando", "score": 43 },
     { "name": "Talla", "score": 26 },
     { "name": "Sovit", "score": 23 }
