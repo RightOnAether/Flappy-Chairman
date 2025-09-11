@@ -336,10 +336,17 @@ function drawScore(){
 
 function drawSpeedUp(){
   if(speedUpTimer > 0){
+    speedPulse += 0.15;
+    const scale = 1 + Math.sin(speedPulse)*0.3;
+    ctx.save();
+    // Move "Speed UP!" near the very top, not near the score
+    ctx.translate(canvas.width/2, canvas.height*0.05); // 5% from top
+    ctx.scale(scale, scale);
     ctx.fillStyle = "yellow";
     ctx.font = `${Math.floor(canvas.width * 0.06)}px sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText("Speed UP!", canvas.width/2, canvas.height*0.08);
+    ctx.fillText("Speed UP!", 0, 0);
+    ctx.restore();
     speedUpTimer--;
   }
 }
@@ -418,3 +425,4 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
