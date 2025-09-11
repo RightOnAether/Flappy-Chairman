@@ -1,17 +1,18 @@
 {
   "Normal": [
-    { "name": "Kevin", "score": 6 }
+    { "name": "Somethin", "score": 14 }
   ],
   "Hard": [
     { "name": "BA", "score": 86 }
   ],
   "Extreme": [
     { "name": "Sam", "score": 106},
-    { "name": "Kevin", "score": 79},
+    { "name": "Somethin", "score": 79},
+    { "name": "Aether", "score": 71},
     { "name": "Rolando", "score": 43 },
     { "name": "Sovit", "score": 23 }
   ],
   "Literally Impossible": [
-    { "name": "Kevin", "score": 6 }
+    { "name": "Somethin", "score": 6 }
   ]
 }
