@@ -218,7 +218,6 @@ let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
 
-let speedUpTimer = 0;
 let pipeGap = 0.4; 
 let pipeSpeed = 3; 
 let pipeInterval = 180;
@@ -293,7 +292,6 @@ function resetGame(){
   pipes = [];
   score = 0;
   frame = 0;
-  speedUpTimer = 0;
   isGameOver = false;
 }
 
@@ -314,9 +312,17 @@ function drawBird(){
 }
 
 function drawPipes(){ 
-  pipes.forEach(pipe => {
+  pipes.forEach((pipe, index) => {
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+
+    // Tint upcoming 10th pipe yellow
+    if((score + 1) % 10 === 0 && !pipe.scored){
+      ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
+      ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+      ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+    }
+
     if(showHitboxes){
       ctx.strokeStyle = "blue"; ctx.lineWidth = 2;
       ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
@@ -332,16 +338,6 @@ function drawScore(){
   ctx.fillText("Score: " + score, 10, canvas.height * 0.15);
   ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
   ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.15 + 40);
-}
-
-function drawSpeedUp(){
-  if(speedUpTimer > 0){
-    ctx.fillStyle = "yellow";
-    ctx.font = `${Math.floor(canvas.width * 0.85)}px sans-serif`;
-    ctx.textAlign = "center";
-    ctx.fillText("Speed UP!", canvas.width/2, canvas.height*0.08);
-    speedUpTimer--;
-  }
 }
 
 function update(){
@@ -374,7 +370,6 @@ function update(){
 
         if(score % 10 === 0){
           pipeSpeed += 0.5;
-          speedUpTimer = 100;
         }
       }
     });
@@ -384,7 +379,6 @@ function update(){
 
   drawPipes();
   drawBird();
-  drawSpeedUp();
   drawScore();
 
   if(isGameOver){
