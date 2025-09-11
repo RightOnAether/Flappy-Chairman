@@ -181,23 +181,20 @@
 <!-- Changes Button and Overlay -->
 <button id="changesBtn">📜</button>
 <div id="changesOverlay">
-  <strong>Todays Combined Update Changes:</strong>
+  <strong>Current Update Changes:</strong>
   <ul>
     <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
-    <li>Also increased the Flap Power by 1 since i found it difficult to go higher from the bottom. (Was 8, Now 9)</li>
-    <li>Speed Up every 10th pipe/score wtv idek but YAY MORE FUN!!</li>
+    <li>Pipe speed increases every 10th score and shows "Speed UP!"</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
 
 <script>
-// Show/Hide changes overlay
 document.getElementById('changesBtn').addEventListener('click', ()=>{
   const overlay = document.getElementById('changesOverlay');
   overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
 });
 
-// ---- GAME LOGIC ----
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -221,8 +218,10 @@ let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
 
-// Difficulty
-let pipeGap = 0.4; let pipeSpeed = 3; let pipeInterval = 180;
+let speedUpTimer = 0;
+let pipeGap = 0.4; 
+let pipeSpeed = 3; 
+let pipeInterval = 180;
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
@@ -230,7 +229,7 @@ function resizeCanvas(){
   bird.width = canvas.width * 0.06;
   bird.height = bird.width;
   bird.x = canvas.width * 0.15;
-  bird.gravity = 0.525 * (canvas.height/600);
+  bird.gravity = 0.5 * (canvas.height/600);
   bird.lift = -9 * (canvas.height/600);
 }
 window.addEventListener('resize', resizeCanvas);
@@ -294,7 +293,9 @@ function resetGame(){
   pipes = [];
   score = 0;
   frame = 0;
+  pipeSpeed = 3;
   isGameOver = false;
+  speedUpTimer = 0;
 }
 
 function flap(){
@@ -334,6 +335,16 @@ function drawScore(){
   ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.08 + 40);
 }
 
+function drawSpeedUp(){
+  if(speedUpTimer > 0){
+    ctx.fillStyle = "yellow";
+    ctx.font = `${Math.floor(canvas.width * 0.06)}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("Speed UP!", canvas.width/2, canvas.height*0.1);
+    speedUpTimer--;
+  }
+}
+
 function update(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
@@ -361,6 +372,11 @@ function update(){
       if(!pipe.scored && bird.x > pipe.x + pipe.width){
         score++;
         pipe.scored = true;
+
+        if(score % 10 === 0){
+          pipeSpeed += 0.5;
+          speedUpTimer = 100; // ~2 seconds
+        }
       }
     });
 
@@ -370,6 +386,7 @@ function update(){
   drawPipes();
   drawBird();
   drawScore();
+  drawSpeedUp();
 
   if(isGameOver){
     ctx.fillStyle = "rgba(0,0,0,0.5)";
@@ -402,5 +419,3 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
-
-
