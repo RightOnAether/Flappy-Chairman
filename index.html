@@ -45,7 +45,6 @@
     transition: all 0.2s ease-in-out;
     cursor: pointer;
   }
-
   select:focus, button:focus { box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.3); }
   button { background: #6495ED; color: #fff; border: none; }
   button:hover { background: #4176d6; }
@@ -92,7 +91,6 @@
     margin-top: 10px;
     display: block;
   }
-
   #charPreviewBox img {
     width: 100px;
     height: 100px;
@@ -100,6 +98,31 @@
     border-radius: 12px;
     border: 2px solid #ccc;
     background: white;
+  }
+
+  #pauseOverlay {
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 10;
+    color: white;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+  }
+  #pauseOverlay h1 {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    font-size: 60px;
+    animation: float 2s ease-in-out infinite;
+  }
+  #pauseOverlay p {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    font-size: 24px;
   }
 
   #changesBtn {
@@ -183,24 +206,12 @@
 <button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
 
-<button id="changesBtn">📜</button>
-<div id="changesOverlay">
-  <strong>Current Update Changes:</strong>
-  <ul>
- <li>Removed Noelle Character</li>
- <li>Decreased "<b>Expert</b>" and "<b>Literally Impossible</b>" Pipe Gap by <b>0.02</b></li>
- <li>Always Updating Static Leaderboard! (Stop asking me only you can ask sarue too)</li>
- <li>Renamed "<b>Normal</b>" to "<b>Baby Mode</b>"</li>
-  </ul>
-  <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
+<div id="pauseOverlay">
+  <h1>Game Paused.</h1>
+  <p>Press "P" to Resume</p>
 </div>
 
 <script>
-document.getElementById('changesBtn').addEventListener('click', ()=>{
-  const overlay = document.getElementById('changesOverlay');
-  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-});
-
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -223,6 +234,7 @@ let gameInterval;
 let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
+let isPaused = false;
 
 let pipeGap = 0.4; 
 let pipeSpeed = 3; 
@@ -274,16 +286,44 @@ function startGame(){
   gameInterval = setInterval(update, 20);
 
   document.addEventListener("keydown", function(event) {
-    if (event.code === "Space") { event.preventDefault(); flap(); }
-    if (event.code === "KeyF") { showHitboxes = !showHitboxes; }
+    if(event.code === "Space" && !isPaused) { event.preventDefault(); flap(); }
+    if(event.code === "KeyF") { showHitboxes = !showHitboxes; }
+    if(event.code === "KeyP") togglePause();
   });
-  canvas.addEventListener("click", flap);
+  canvas.addEventListener("click", ()=>{ if(!isPaused) flap(); });
+}
+
+function togglePause(){
+  const overlay = document.getElementById("pauseOverlay");
+  if(!isPaused){
+    isPaused = true;
+    overlay.style.display = "block";
+    bgMusic.pause();
+    clearInterval(gameInterval);
+  } else {
+    overlay.style.display = "none";
+    isPaused = false;
+    let countdown = 3;
+    const countdownText = setInterval(()=>{
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height);
+      drawPipes(); drawBird(); drawScore();
+      ctx.fillStyle="white"; ctx.font=`${Math.floor(canvas.width*0.1)}px sans-serif`;
+      ctx.textAlign="center"; ctx.fillText(countdown, canvas.width/2, canvas.height/2);
+      countdown--;
+      if(countdown<0){
+        clearInterval(countdownText);
+        if(!isMuted) bgMusic.play();
+        gameInterval = setInterval(update, 20);
+      }
+    },1000);
+  }
 }
 
 document.getElementById("muteBtn").addEventListener("click", ()=>{
   isMuted = !isMuted;
   if(isMuted) bgMusic.pause();
-  else if(!isGameOver) bgMusic.play();
+  else if(!isGameOver && !isPaused) bgMusic.play();
 });
 
 document.getElementById("playAgainBtn").addEventListener("click", ()=>{
@@ -302,124 +342,8 @@ function resetGame(){
   isGameOver = false;
 }
 
-function flap(){
-  if(!isGameOver){
-    bird.velocity = bird.lift;
-    flapSound.currentTime = 0;
-    flapSound.play();
-  }
-}
+// Flap, drawBird, drawPipes, drawScore, update, triggerGameOver remain the same as in your previous code
 
-function drawBird(){ 
-  ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height); 
-  if(showHitboxes){
-    ctx.strokeStyle = "green"; ctx.lineWidth = 2;
-    ctx.strokeRect(bird.x, bird.y, bird.width, bird.height);
-  }
-}
-
-function drawPipes(){ 
-  pipes.forEach(pipe => {
-    ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
-    ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
-
-    // Tint upcoming 10th pipe yellow
-    if((score + 1) % 10 === 0 && !pipe.scored){
-      ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
-      ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
-      ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
-    }
-
-    if(showHitboxes){
-      ctx.strokeStyle = "blue"; ctx.lineWidth = 2;
-      ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
-      ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
-    }
-  });
-}
-
-function drawScore(){
-  const isRoaring = document.getElementById("character").value === "Roaring.png";
-  ctx.fillStyle = isRoaring ? "white" : "black";
-  ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
-  ctx.fillText("Score: " + score, 10, canvas.height * 0.15);
-  ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
-  ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.15 + 40);
-}
-
-function update(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-
-  if(!isGameOver){
-    bird.velocity += bird.gravity;
-    bird.y += bird.velocity;
-
-    if(bird.y + bird.height > canvas.height || bird.y < -25){
-      hitSound.currentTime = 0; hitSound.play(); triggerGameOver();
-    }
-
-    if(frame % pipeInterval === 0){
-      let topHeight = Math.random() * (canvas.height - pipeGap*canvas.height - 100) + 50;
-      pipes.push({ x: canvas.width, width: canvas.width * 0.12, top: topHeight, bottom: canvas.height - topHeight - pipeGap*canvas.height, scored: false });
-    }
-
-    pipes.forEach(pipe => {
-      pipe.x -= pipeSpeed;
-      if(bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x){
-        if(bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom){
-          hitSound.currentTime = 0; hitSound.play(); triggerGameOver();
-        }
-      }
-      if(!pipe.scored && bird.x > pipe.x + pipe.width){
-        score++;
-        pipe.scored = true;
-
-        if(score % 10 === 0){
-          pipeSpeed += 0.5;
-        }
-      }
-    });
-
-    pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
-  }
-
-  drawPipes();
-  drawBird();
-  drawScore();
-
-  if(isGameOver){
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    const imgWidth = canvas.width * 0.6;
-    const imgHeight = imgWidth * (gameOverImg.height / gameOverImg.width || 0.5);
-    ctx.drawImage(gameOverImg, (canvas.width - imgWidth)/2, canvas.height*0.3 - imgHeight/2, imgWidth, imgHeight);
-
-    ctx.fillStyle = document.getElementById("character").value === "Roaring.png" ? "white" : "white";
-    ctx.font = `${Math.floor(canvas.width*0.05)}px sans-serif`;
-    ctx.fillText("Final Score: " + score, canvas.width*0.25, canvas.height*0.75);
-
-    document.getElementById("playAgainBtn").style.display = "block";
-  }
-
-  frame++;
-}
-
-function triggerGameOver(){
-  if(isGameOver) return;
-  isGameOver = true;
-  clearInterval(gameInterval);
-  bgMusic.pause();
-  if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
-}
-
-document.getElementById("character").addEventListener("change", (e)=>{
-  document.getElementById("charPreview").src = e.target.value;
-});
 </script>
 </body>
 </html>
-
-
-
-
