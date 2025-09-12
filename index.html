@@ -4,27 +4,162 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flappy Chairman</title>
+<style>
+  body { margin: 0; overflow: hidden; font-family: 'Poppins', sans-serif; background: #f0f2f5; }
+  #gameCanvas { display: block; background: linear-gradient(to bottom, #87ceeb, #f0f2f5); }
+
+  #menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffffee;
+    padding: 30px 40px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 2;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #menu h1 {
+    margin: 0 0 25px;
+    font-size: 50px;
+    color: #333;
+    animation: float 2s ease-in-out infinite;
+    letter-spacing: 2px;
+  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+  #menu label { font-size: 18px; font-weight: 500; display: block; margin-bottom: 4px; color: #555; }
+  select, button {
+    margin-top: 5px;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  select:focus, button:focus { box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.3); }
+  button { background: #6495ED; color: #fff; border: none; }
+  button:hover { background: #4176d6; }
+
+  #muteBtn, #playAgainBtn {
+    position: absolute;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 3;
+    transition: all 0.2s ease-in-out;
+  }
+  #muteBtn { bottom: 20px; left: 20px; }
+  #muteBtn:hover { background: #e0e0e0; }
+
+  #playAgainBtn { bottom: 80px; left: 50%; transform: translateX(-50%); display: none; background: #ff4c4c; color: white; }
+  #playAgainBtn:hover { background: #e04343; }
+
+  #hitboxText {
+    position: absolute; bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px; color: #333; z-index: 2;
+    background: rgba(255,255,255,0.8); padding: 5px 12px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  #creditBox {
+    position: absolute; left: 20px; top: 50%;
+    transform: translateY(-50%);
+    width: 120px; aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    font-size: 14px; text-align: center; color: #333;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 2;
+  }
+
+  #charPreviewBox {
+    margin-top: 10px;
+    display: block;
+  }
+
+  #charPreviewBox img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid #ccc;
+    background: white;
+  }
+
+  #changesBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 26px;
+    padding: 10px 14px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 4;
+  }
+  #changesOverlay {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 9999;
+    display: none;
+    max-width: 90%;
+    font-size: 16px;
+  }
+  #changesOverlay button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #ff4c4c;
+    color: white;
+  }
+</style>
 </head>
 <body>
-<link rel="stylesheet" href="src/style.css">
+
 <div id="menu">
   <h1>Flappy Chairman</h1>
   <label>Select Character</label>
   <select id="character">
-    <option value="Mao.png">🇨🇳 Chairman Mao</option>
-    <option value="Jinping.png">🇨🇳 Chairman Xi jinping</option>
-    <option value="Kim.png">🇰🇵 Kim Jong Un</option>
-    <option value="Trump.png">🇺🇸 Trump</option>
-    <option value="Nyancat.png">Nyan Cat</option>
-    <option value="Teto.png">Teto Plush</option>
-    <option value="Plane.png">Plane</option>
-    <option value="Honda.png">2006 Honda Civic</option>
-    <option value="Roaring.png">Roaring Knight</option>
-    <option value="Baldi.png">Baldi</option>
-    <option value="Osaka.png">Osaka</option>
-    <option value="Shrek.png">Shrek</option>
-    <option value="Yoshi.png">Yoshi</option>
-    <option value="Flappybird.png">Flappy Bird</option>
+    <option value="assets/characters/Mao.png">🇨🇳 Chairman Mao</option>
+    <option value="assets/characters/Jinping.png">🇨🇳 Chairman Xi jinping</option>
+    <option value="assets/characters/Kim.png">🇰🇵 Kim Jong Un</option>
+    <option value="assets/characters/Trump.png">🇺🇸 Trump</option>
+    <option value="assets/characters/Nyancat.png">Nyan Cat</option>
+    <option value="assets/characters/Teto.png">Teto Plush</option>
+    <option value="assets/characters/Plane.png">Plane</option>
+    <option value="assets/characters/Honda.png">2006 Honda Civic</option>
+    <option value="assets/characters/Roaring.png">Roaring Knight</option>
+    <option value="assets/characters/Baldi.png">Baldi</option>
+    <option value="assets/characters/Osaka.png">Osaka</option>
+    <option value="assets/characters/Shrek.png">Shrek</option>
+    <option value="assets/characters/Yoshi.png">Yoshi</option>
+    <option value="assets/characters/Flappybird.png">Flappy Bird</option>
   </select>
 
   <div id="charPreviewBox">
@@ -52,27 +187,17 @@
 <div id="changesOverlay">
   <strong>Current Update Changes:</strong>
   <ul>
-    <li>┏(＾0＾)┛Made normal mode faster</li>
-    <li>╰(*´︶`*)╯Made hard mode harder</li>
-    <li>＼(^o^)／ Added a local scoreboard</li>
-    <li><(￣︶￣)↗ Added a global static leaderboard</li>
-    <li>◉‿◉ UI fixes</li>
-    <li>🐛 Bug fixes and tweaks</li>
-    <li>📦 Backend asset placement restructuring (no visible changes but massive headache reliever for future development)</li>
+    <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
+    <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
+    <li>Flap power is now 9.25.</li>
+    <li>Press F to toggle hitbox borders.</li>
+    <li>Made "Literally Impossible" Slightly Possible.</li>
+    <li>NEW CHARACTERS: Baldi, Shrek, Osaka, And Yoshi</li>
+    <li>Increased Pipe Gap by 0.5</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
-<div id="scoreboardOverlay">
-  <h2>🏆 High Scores</h2>
-  <ul id="scoreList"></ul>
-</div>
+
 <script src="src/index.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
