@@ -11,16 +11,16 @@
     { "name": "Sam", "score": 106 },
     { "name": "Rolando", "score": 96 },
     { "name": "Somethin", "score": 79 },
-    { "name": "Sarue", "score": 38 },
-    { "name": "Talla", "score": 26 }
+    { "name": "Talla", "score": 55 },
+    { "name": "Sarue", "score": 38 }
   ],
   "Literally Impossible": [
-    { "name": "Sam", "score": 14 },
+    { "name": "Sam", "score": 25 },
+    { "name": "Rolando", "score": 23 },
+    { "name": "Somethin", "score": 18 },
     { "name": "Eugene", "score": 13 },
     { "name": "Sarue", "score": 12 },
     { "name": "Talla", "score": 11 },
-    { "name": "Rolando", "score": 11 },
-    { "name": "Somethin", "score": 11 },
     { "name": "Louis", "score": 10 },
     { "name": "Naim", "score": 10 },
     { "name": "Taz", "score": 7 }
