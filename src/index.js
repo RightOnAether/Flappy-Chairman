@@ -19,15 +19,12 @@ let bgMusic;
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
 let score = 0;
-let highScores = JSON.parse(localStorage.getItem("highScores")) || {
-  normal: 0, hard: 0, extreme: 0, impossible: 0
-};
+let highScore = parseInt(localStorage.getItem("highScore")) || 0;
 let frame = 0;
 let gameInterval;
 let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
-let currentDifficulty = "normal";
 
 let pipeGap = 0.4; 
 let pipeSpeed = 3; 
@@ -44,17 +41,6 @@ function resizeCanvas(){
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
-
-// 🔑 global key listener (fixes F toggle issue)
-document.addEventListener("keydown", function(event) {
-  if (event.code === "Space") {
-    event.preventDefault();
-    flap();
-  }
-  if (event.code === "KeyF" && !isGameOver) {
-    showHitboxes = !showHitboxes;
-  }
-});
 
 function startGame(){
   const character = document.getElementById("character").value;
@@ -75,21 +61,24 @@ function startGame(){
   }
   bgMusic.loop = true;
 
-  currentDifficulty = document.getElementById("difficulty").value;
-  if(currentDifficulty === "normal") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
-  if(currentDifficulty === "hard") { pipeGap = 0.35; pipeSpeed = 3; pipeInterval = 180; }
-  if(currentDifficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 45; }
-  if(currentDifficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
+  const difficulty = document.getElementById("difficulty").value;
+  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 45; }
+  if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
   document.getElementById("charPreviewBox").style.display = "none";
-  document.getElementById("hitboxText").style.display = "none"; // hide tip during game
 
   resetGame();
   if(!isMuted) bgMusic.play();
   gameInterval = setInterval(update, 20);
 
+  document.addEventListener("keydown", function(event) {
+    if (event.code === "Space") { event.preventDefault(); flap(); }
+    if (event.code === "KeyF") { showHitboxes = !showHitboxes; }
+  });
   canvas.addEventListener("click", flap);
 }
 
@@ -104,7 +93,6 @@ document.getElementById("playAgainBtn").addEventListener("click", ()=>{
   document.getElementById("menu").style.display = "flex";
   document.getElementById("creditBox").style.display = "flex";
   document.getElementById("charPreviewBox").style.display = "block";
-  document.getElementById("hitboxText").style.display = "block"; // show tip again in menu
 });
 
 function resetGame(){
@@ -137,6 +125,7 @@ function drawPipes(){
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
 
+    // Tint upcoming 10th pipe yellow
     if((score + 1) % 10 === 0 && !pipe.scored){
       ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
       ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
@@ -157,7 +146,7 @@ function drawScore(){
   ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
   ctx.fillText("Score: " + score, 10, canvas.height * 0.15);
   ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
-  ctx.fillText("High Score: " + highScores[currentDifficulty], 10, canvas.height * 0.15 + 40);
+  ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.15 + 40);
 }
 
 function update(){
@@ -187,7 +176,10 @@ function update(){
       if(!pipe.scored && bird.x > pipe.x + pipe.width){
         score++;
         pipe.scored = true;
-        if(score % 10 === 0){ pipeSpeed += 0.5; }
+
+        if(score % 10 === 0){
+          pipeSpeed += 0.5;
+        }
       }
     });
 
@@ -220,22 +212,7 @@ function triggerGameOver(){
   isGameOver = true;
   clearInterval(gameInterval);
   bgMusic.pause();
-
-  if(score > highScores[currentDifficulty]){
-    highScores[currentDifficulty] = score;
-    localStorage.setItem("highScores", JSON.stringify(highScores));
-  }
-
-  showScoreboard();
-}
-
-function showScoreboard(){
-  const list = document.getElementById("scoreList");
-  list.innerHTML = "";
-  for(const diff in highScores){
-    list.innerHTML += `<li><strong>${diff.toUpperCase()}</strong>: ${highScores[diff]}</li>`;
-  }
-  document.getElementById("scoreboardOverlay").style.display = "block";
+  if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
 }
 
 document.getElementById("character").addEventListener("change", (e)=>{
