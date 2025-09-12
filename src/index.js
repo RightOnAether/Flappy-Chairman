@@ -45,6 +45,17 @@ function resizeCanvas(){
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
+// 🔑 global key listener (fixes F toggle issue)
+document.addEventListener("keydown", function(event) {
+  if (event.code === "Space") {
+    event.preventDefault();
+    flap();
+  }
+  if (event.code === "KeyF" && !isGameOver) {
+    showHitboxes = !showHitboxes;
+  }
+});
+
 function startGame(){
   const character = document.getElementById("character").value;
   characterImg.src = "assets/characters/" + character;
@@ -73,15 +84,12 @@ function startGame(){
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
   document.getElementById("charPreviewBox").style.display = "none";
+  document.getElementById("hitboxText").style.display = "none"; // hide tip during game
 
   resetGame();
   if(!isMuted) bgMusic.play();
   gameInterval = setInterval(update, 20);
 
-  document.addEventListener("keydown", function(event) {
-    if (event.code === "Space") { event.preventDefault(); flap(); }
-    if (event.code === "KeyF") { showHitboxes = !showHitboxes; }
-  });
   canvas.addEventListener("click", flap);
 }
 
@@ -96,6 +104,7 @@ document.getElementById("playAgainBtn").addEventListener("click", ()=>{
   document.getElementById("menu").style.display = "flex";
   document.getElementById("creditBox").style.display = "flex";
   document.getElementById("charPreviewBox").style.display = "block";
+  document.getElementById("hitboxText").style.display = "block"; // show tip again in menu
 });
 
 function resetGame(){
