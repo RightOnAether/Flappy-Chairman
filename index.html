@@ -190,6 +190,7 @@
  <li>Removed Noelle Character</li>
  <li>Decreased "<b>Expert</b>" and "<b>Literally Impossible</b>" Pipe Gap by <b>0.02</b></li>
  <li>Always Updating Static Leaderboard! (Stop asking me only you can ask sarue too)</li>
+ <li>Renamed "<b>Normal</b>" to "<b>Baby Mode</b>"</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
@@ -260,7 +261,7 @@ function startGame(){
 
   const difficulty = document.getElementById("difficulty").value;
   if(difficulty === "baby mode") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 15; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 18; pipeInterval = 90; }
   if(difficulty === "extreme") { pipeGap = 0.38; pipeSpeed = 25; pipeInterval = 45; }
   if(difficulty === "impossible") { pipeGap = 0.38; pipeSpeed = 25; pipeInterval = 10; }
 
@@ -418,6 +419,7 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
 
 
 
