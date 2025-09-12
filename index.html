@@ -5,85 +5,179 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flappy Chairman</title>
 <style>
-  body { margin: 0; overflow: hidden; font-family: 'Poppins', sans-serif; background: #f0f2f5; }
-  #gameCanvas { display: block; background: linear-gradient(to bottom, #87ceeb, #f0f2f5); }
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  background: #f0f2f5;
+}
 
-  #menu {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: #ffffffee; padding: 30px 40px; border-radius: 20px;
-    text-align: center; z-index: 2; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-  }
-  #menu h1 { margin: 0 0 25px; font-size: 50px; color: #333;
-    animation: float 2s ease-in-out infinite; letter-spacing: 2px; }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-  #menu label { font-size: 18px; font-weight: 500; display: block; margin-bottom: 4px; color: #555; }
-  select, button {
-    margin-top: 5px; padding: 12px 18px; font-size: 16px; border-radius: 10px;
-    border: 1px solid #ccc; outline: none; transition: all 0.2s ease-in-out; cursor: pointer;
-  }
-  select:focus, button:focus { box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.3); }
-  button { background: #6495ED; color: #fff; border: none; }
-  button:hover { background: #4176d6; }
+#gameCanvas {
+  display: block;
+  margin: auto;
+  background: #87CEEB;
+}
 
-  #muteBtn, #playAgainBtn {
-    position: absolute; padding: 12px 18px; font-size: 16px; border-radius: 12px;
-    border: none; cursor: pointer; background: rgba(255,255,255,0.95);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 3; transition: all 0.2s ease-in-out;
-  }
-  #muteBtn { bottom: 20px; left: 20px; }
-  #muteBtn:hover { background: #e0e0e0; }
-  #playAgainBtn { bottom: 80px; left: 50%; transform: translateX(-50%);
-    display: none; background: #ff4c4c; color: white; }
-  #playAgainBtn:hover { background: #e04343; }
+#menu {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 3;
+}
 
-  #hitboxText {
-    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-    font-size: 18px; color: #333; z-index: 2;
-    background: rgba(255,255,255,0.8); padding: 5px 12px; border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
+#creditBox {
+  position: absolute;
+  bottom: 80px;
+  left: 20px;
+  background: rgba(255,255,255,0.9);
+  padding: 8px 12px;
+  border: 2px solid black;
+  border-radius: 8px;
+  font-size: 14px;
+}
 
-  #creditBox {
-    position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-    width: 120px; aspect-ratio: 1/1; border-radius: 50%; display: flex;
-    flex-direction: column; justify-content: center; align-items: center;
-    font-size: 14px; text-align: center; color: #333;
-    background: rgba(255,255,255,0.9); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    z-index: 2;
-  }
+#charPreviewBox {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+  background: rgba(255,255,255,0.9);
+  padding: 8px;
+  border: 2px solid black;
+  border-radius: 8px;
+  text-align: center;
+}
 
-  #charPreviewBox { margin-top: 10px; display: block; }
-  #charPreviewBox img {
-    width: 100px; height: 100px; object-fit: contain;
-    border-radius: 12px; border: 2px solid #ccc; background: white;
-  }
+#charPreview {
+  max-width: 60px;
+  display: block;
+  margin: auto;
+}
 
-  #changesBtn {
-    position: absolute; bottom: 20px; right: 20px; font-size: 26px;
-    padding: 10px 14px; border-radius: 50%; border: none; cursor: pointer;
-    background: rgba(255,255,255,0.9); box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 4;
-  }
-  #changesOverlay {
-    position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.9); color: white; padding: 20px;
-    border-radius: 12px; z-index: 9999; display: none; max-width: 90%; font-size: 16px;
-  }
-  #changesOverlay button {
-    margin-top: 10px; padding: 8px 12px; border-radius: 8px;
-    border: none; cursor: pointer; background: #ff4c4c; color: white;
-  }
+#hitboxText {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: rgba(255,255,255,0.9);
+  padding: 6px 10px;
+  border: 1px solid black;
+  border-radius: 6px;
+  font-size: 14px;
+}
 
-  #scoreboardOverlay {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(255,255,255,0.95); padding: 20px 30px;
-    border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    z-index: 9999; display: none; text-align: center;
-  }
-  #scoreboardOverlay h2 { margin-bottom: 10px; }
-  #scoreboardOverlay ul { list-style: none; padding: 0; }
-  #scoreboardOverlay li { margin: 6px 0; font-size: 18px; }
-</style>
+/* ✅ Changes button: circle with border */
+#changesBtn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 26px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid black;
+  cursor: pointer;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#changesOverlay {
+  display: none;
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  width: 300px;
+  background: rgba(255,255,255,0.95);
+  border: 2px solid black;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 5;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* ✅ Mute button with black outline for visibility */
+#muteBtn {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  border: 2px solid black;
+  background: rgba(255,255,255,0.9);
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  text-shadow: 
+    1px 1px 2px black,
+    -1px -1px 2px black,
+    1px -1px 2px black,
+    -1px 1px 2px black;
+}
+
+/* ✅ Play Again button styled like others */
+#playAgainBtn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid black;
+  background: rgba(255,255,255,0.9);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  color: white;
+  text-shadow: 
+    1px 1px 2px black,
+    -1px -1px 2px black,
+    1px -1px 2px black,
+    -1px 1px 2px black;
+}
+
+/* ✅ Scoreboard Overlay fixed to right quarter */
+#scoreboardOverlay {
+  position: fixed;
+  top: 10%;
+  right: 0;
+  width: 20%;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.85);
+  border-left: 3px solid black;
+  padding: 15px;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+  display: none;
+  overflow-y: auto;
+  z-index: 6;
+}
+
+#scoreboardOverlay h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.4em;
+}
+
+#scoreboardOverlay ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#scoreboardOverlay li {
+  padding: 8px 5px;
+  border-bottom: 1px solid #aaa;
+  font-size: 1.1em;
+}
+
 </head>
 <body>
 
@@ -146,9 +240,9 @@
 <div id="scoreboardOverlay">
   <h2>🏆 High Scores</h2>
   <ul id="scoreList"></ul>
-  <button onclick="document.getElementById('scoreboardOverlay').style.display='none'">Close</button>
 </div>
 
 <script src="src/index.js"></script>
 </body>
 </html>
+
