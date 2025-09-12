@@ -253,6 +253,15 @@ function startGame(){
     bottomPipeImg.src = "roaring_bottom_pipe.png";
   } else {
     bgMusic = new Audio("Music.mp3");
+bgMusic.loop = true; // keep looping
+
+// Use Web Audio API to amplify
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const track = audioCtx.createMediaElementSource(bgMusic);
+const gainNode = audioCtx.createGain();
+gainNode.gain.value = 5; // 5× louder than normal
+track.connect(gainNode).connect(audioCtx.destination);
+
     backgroundImg.src = "Background.png";
     topPipeImg.src = "tube2.png";
     bottomPipeImg.src = "tube.png";
@@ -419,3 +428,4 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
