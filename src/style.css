@@ -199,3 +199,10 @@ body {
     box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
   }
 }
+
+* {
+  background: hotpink !important;
+  color: lime !important;
+  outline: 3px solid red !important;
+}
+
