@@ -1,9 +1,10 @@
 {
   "Baby Mode": [
-    { "name": "Sam", "score": 31 },
-    { "name": "Somethin", "score": 14 }
+    { "name": "Somethin", "score": 72 },
+    { "name": "Sam", "score": 31 }
   ],
   "Hard": [
+    { "name": "Somethin", "score": 120 },
     { "name": "BA", "score": 86 }
   ],
   "Extreme": [
@@ -20,6 +21,7 @@
     { "name": "Somethin", "score": 18 },
     { "name": "Eugene", "score": 13 },
     { "name": "Sarue", "score": 12 },
+    { "name": "Izzy", "score": 12 }
     { "name": "Talla", "score": 11 },
     { "name": "Louis", "score": 10 },
     { "name": "Naim", "score": 10 },
