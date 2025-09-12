@@ -289,58 +289,85 @@ function drawScore(){
 
 function update(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height);
+  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 
   if(!isGameOver){
-    bird.velocity+=bird.gravity;
-    bird.y+=bird.velocity;
+    // gravity
+    bird.velocity += bird.gravity;
+    bird.y += bird.velocity;
 
-    if(bird.y+bird.height>canvas.height || bird.y<-25){
-      hitSound.currentTime=0; hitSound.play(); triggerGameOver();
+    // pipe movement
+    pipes.forEach(pipe => { pipe.x -= pipeSpeed; });
+
+    // pipe spawning
+    if(frame % pipeInterval === 0){
+      let top = Math.random()*(canvas.height*pipeGap);
+      let bottom = canvas.height - top - canvas.height*pipeGap;
+      pipes.push({ x: canvas.width, top: top, bottom: bottom, width: 60, scored: false });
     }
-    if(frame%pipeInterval===0){
-      let topHeight=Math.random()*(canvas.height-pipeGap*canvas.height-100)+50;
-      pipes.push({x:canvas.width, width:canvas.width*0.12, top:topHeight, bottom:canvas.height-topHeight-pipeGap*canvas.height, scored:false});
-    }
-    pipes.forEach(pipe=>{
-      pipe.x-=pipeSpeed;
-      if(bird.x<pipe.x+pipe.width && bird.x+bird.width>pipe.x){
-        if(bird.y<pipe.top || bird.y+bird.height>canvas.height-pipe.bottom){
-          hitSound.currentTime=0; hitSound.play(); triggerGameOver();
+
+    // pipe removal
+    if(pipes.length > 0 && pipes[0].x + pipes[0].width < 0){ pipes.shift(); }
+
+    // collisions
+    pipes.forEach(pipe => {
+      if(bird.x + bird.width > pipe.x && bird.x < pipe.x + pipe.width &&
+        (bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom)){
+          endGame();
         }
-      }
-      if(!pipe.scored && bird.x>pipe.x+pipe.width){
-        score++; pipe.scored=true;
-        if(score%10===0){ pipeSpeed+=0.5; }
+    });
+
+    // floor / ceiling
+    if(bird.y + bird.height > canvas.height || bird.y < 0){
+      endGame();
+    }
+
+    // scoring
+    pipes.forEach(pipe => {
+      if(!pipe.scored && pipe.x + pipe.width < bird.x){
+        score++;
+        pipe.scored = true;
+        if(score % 10 === 0){ pipeSpeed += 1; }
       }
     });
-    pipes=pipes.filter(pipe=>pipe.x+pipe.width>0);
   }
 
-  drawPipes(); drawBird(); drawScore();
+  drawPipes();
+  drawBird();
+  drawScore();
 
   if(isGameOver){
-    const char=document.getElementById("character").value;
-    if(char==="Noelle.png"){
-      const gif=document.getElementById("noelleGameOver");
-      gif.style.display="block";
-      gif.style.left="50%"; gif.style.top="40%";
-      gif.style.transform="translate(-50%,-50%)";
-      gif.style.width=(canvas.width*0.6)+"px";
-    }else{
-      ctx.fillStyle="rgba(0,0,0,0.5)";
+    const character = document.getElementById("character").value;
+
+    if(character === "Noelle.png"){
+      // Show animated Noelle game over gif on top of canvas
+      const gif = document.getElementById("noelleGameOver");
+      gif.style.display = "block";
+      gif.style.position = "absolute";
+      gif.style.left = "50%";
+      gif.style.top = "40%";
+      gif.style.transform = "translate(-50%, -50%)";
+      gif.style.width = (canvas.width * 0.4) + "px";  // smaller now
+      gif.style.height = "auto"; // keep aspect ratio
+    } else {
+      // normal game over PNG
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
       ctx.fillRect(0,0,canvas.width,canvas.height);
-      const imgWidth=canvas.width*0.6;
-      const imgHeight=imgWidth*(gameOverImg.height/gameOverImg.width || 0.5);
-      ctx.drawImage(gameOverImg,(canvas.width-imgWidth)/2,canvas.height*0.3-imgHeight/2,imgWidth,imgHeight);
+      const imgWidth = canvas.width * 0.6;
+      const imgHeight = imgWidth * (gameOverImg.height / gameOverImg.width || 0.5);
+      ctx.drawImage(gameOverImg, (canvas.width - imgWidth)/2, canvas.height*0.3 - imgHeight/2, imgWidth, imgHeight);
     }
-    ctx.fillStyle="white";
-    ctx.font=`${Math.floor(canvas.width*0.05)}px sans-serif`;
-    ctx.fillText("Final Score: "+score,canvas.width*0.25,canvas.height*0.75);
-    document.getElementById("playAgainBtn").style.display="block";
+
+    ctx.fillStyle = "white";
+    ctx.font = `${Math.floor(canvas.width*0.05)}px sans-serif`;
+    ctx.fillText("Final Score: " + score, canvas.width*0.25, canvas.height*0.75);
+
+    document.getElementById("playAgainBtn").style.display = "block";
   }
+
   frame++;
 }
+
 
 function triggerGameOver(){
   if(isGameOver)return;
@@ -355,3 +382,4 @@ document.getElementById("character").addEventListener("change", e=>{
 </script>
 </body>
 </html>
+
