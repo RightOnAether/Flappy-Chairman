@@ -62,8 +62,8 @@ function startGame(){
   bgMusic.loop = true;
 
   const difficulty = document.getElementById("difficulty").value;
-  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 15; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 20; pipeInterval = 150; }
+  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 200; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 25; pipeInterval = 150; }
   if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 30; pipeInterval = 40; }
   if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
 
