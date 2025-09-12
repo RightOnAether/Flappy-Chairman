@@ -168,7 +168,7 @@
 
   <label>Select Difficulty</label>
   <select id="difficulty">
-    <option value="normal">Normal</option>
+    <option value="baby mode">Baby Mode</option>
     <option value="hard">Hard</option>
     <option value="extreme">Extreme</option>
     <option value="impossible">Literally Impossible</option>
@@ -259,10 +259,10 @@ function startGame(){
   bgMusic.loop = true;
 
   const difficulty = document.getElementById("difficulty").value;
-  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 45; }
-  if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
+  if(difficulty === "baby mode") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 15; pipeInterval = 180; }
+  if(difficulty === "extreme") { pipeGap = 0.38; pipeSpeed = 25; pipeInterval = 45; }
+  if(difficulty === "impossible") { pipeGap = 0.38; pipeSpeed = 25; pipeInterval = 10; }
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
@@ -418,5 +418,6 @@ document.getElementById("character").addEventListener("change", (e)=>{
 </script>
 </body>
 </html>
+
 
 
