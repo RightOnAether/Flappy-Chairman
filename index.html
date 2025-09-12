@@ -220,7 +220,10 @@ function resizeCanvas(){
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
+let gameStarted = false; // at the top
+
 function startGame(){
+  gameStarted = true; // game is now running
   const character = document.getElementById("character").value;
   characterImg.src = character;
 
@@ -258,7 +261,7 @@ document.addEventListener("keydown", function(event){
   if(event.code==="Space"){event.preventDefault(); flap();}
   if(event.code==="KeyF"){showHitboxes=!showHitboxes;}
 
-  if(event.code==="KeyP" && !isGameOver){
+  if(event.code==="KeyP" && !isGameOver && gameStarted){ // only allow pause if gameStarted
     if(!isPaused){
       isPaused=true;
       pauseOverlay.style.display='flex';
@@ -349,3 +352,4 @@ function update(){
 </script>
 </body>
 </html>
+
