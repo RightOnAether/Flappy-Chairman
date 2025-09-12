@@ -10,7 +10,8 @@
 
   #menu {
     position: absolute;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background: #ffffffee;
     padding: 30px 40px;
@@ -18,57 +19,124 @@
     text-align: center;
     z-index: 2;
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
-  #menu h1 { margin: 0 0 25px; font-size: 50px; color: #333; animation: float 2s ease-in-out infinite; letter-spacing: 2px; }
-  @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
-  #menu label { font-size: 18px; font-weight: 500; margin-bottom: 4px; color: #555; }
-  select, button { margin-top: 5px; padding: 12px 18px; font-size: 16px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
+
+  #menu h1 {
+    margin: 0 0 25px;
+    font-size: 50px;
+    color: #333;
+    animation: float 2s ease-in-out infinite;
+    letter-spacing: 2px;
+  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+  #menu label { font-size: 18px; font-weight: 500; display: block; margin-bottom: 4px; color: #555; }
+  select, button {
+    margin-top: 5px;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  select:focus, button:focus { box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.3); }
   button { background: #6495ED; color: #fff; border: none; }
   button:hover { background: #4176d6; }
 
   #muteBtn, #playAgainBtn {
-    position: absolute; padding: 12px 18px; font-size: 16px;
-    border-radius: 12px; border: none; cursor: pointer;
+    position: absolute;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
     background: rgba(255,255,255,0.95);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 3;
+    transition: all 0.2s ease-in-out;
   }
   #muteBtn { bottom: 20px; left: 20px; }
   #muteBtn:hover { background: #e0e0e0; }
+
   #playAgainBtn { bottom: 80px; left: 50%; transform: translateX(-50%); display: none; background: #ff4c4c; color: white; }
   #playAgainBtn:hover { background: #e04343; }
 
   #hitboxText {
-    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 20px; left: 50%;
+    transform: translateX(-50%);
     font-size: 18px; color: #333; z-index: 2;
     background: rgba(255,255,255,0.8); padding: 5px 12px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
 
   #creditBox {
-    position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-    width: 120px; aspect-ratio: 1/1; border-radius: 50%;
+    position: absolute; left: 20px; top: 50%;
+    transform: translateY(-50%);
+    width: 120px; aspect-ratio: 1/1;
+    border-radius: 50%;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     font-size: 14px; text-align: center; color: #333;
     background: rgba(255,255,255,0.9);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 2;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 2;
   }
 
-  #charPreviewBox { margin-top: 10px; display: block; }
-  #charPreviewBox img { width: 100px; height: 100px; object-fit: contain; border-radius: 12px; border: 2px solid #ccc; background: white; }
+  #charPreviewBox {
+    margin-top: 10px;
+    display: block;
+  }
+
+  #charPreviewBox img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid #ccc;
+    background: white;
+  }
 
   #changesBtn {
-    position: absolute; bottom: 20px; right: 20px;
-    font-size: 26px; padding: 10px 14px; border-radius: 50%; border: none; cursor: pointer;
-    background: rgba(255,255,255,0.9); box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 4;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 26px;
+    padding: 10px 14px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 4;
   }
   #changesOverlay {
-    position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.9); color: white; padding: 20px; border-radius: 12px;
-    z-index: 9999; display: none; max-width: 90%; font-size: 16px;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 9999;
+    display: none;
+    max-width: 90%;
+    font-size: 16px;
   }
   #changesOverlay button {
-    margin-top: 10px; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer;
-    background: #ff4c4c; color: white;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #ff4c4c;
+    color: white;
   }
 </style>
 </head>
@@ -120,13 +188,16 @@
 <div id="changesOverlay">
   <strong>Current Update Changes:</strong>
   <ul>
-    <li>Decreased Pipe Gap by .02</li>
-    <li>✨ New Custom Theme for Noelle (pipes, bg, theme music, animated game over)</li>
+    <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
+    <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
+    <li>Flap power is now 9.25.</li>
+    <li>Press F to toggle hitbox borders.</li>
+    <li>Made "Literally Impossible" Slightly Possible.</li>
+    <li>NEW CHARACTERS: Baldi, Shrek, Osaka, And Yoshi</li>
+    <li>Increased Pipe Gap by 0.5`</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
-
-<img id="noelleGameOver" src="Noelle_gameover.gif" style="display:none; position:absolute; z-index:5;">
 
 <script>
 document.getElementById('changesBtn').addEventListener('click', ()=>{
@@ -147,7 +218,7 @@ const flapSound = new Audio("flap.mp3");
 const hitSound = new Audio("hit.mp3");
 let bgMusic;
 
-let bird = { x:0, y:0, width:0, height:0, gravity:0, lift:0, velocity:0 };
+let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
 let score = 0;
 let highScore = parseInt(localStorage.getItem("highScore")) || 0;
@@ -157,8 +228,8 @@ let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
 
-let pipeGap = 0.4;
-let pipeSpeed = 3;
+let pipeGap = 0.4; 
+let pipeSpeed = 3; 
 let pipeInterval = 180;
 
 function resizeCanvas(){
@@ -184,107 +255,100 @@ function startGame(){
     backgroundImg.src = "roaring_bg.png";
     topPipeImg.src = "roaring_top_pipe.png";
     bottomPipeImg.src = "roaring_bottom_pipe.png";
-    document.getElementById("noelleGameOver").style.display = "none";
-  }
-  else if (character === "Noelle.png") {
-    bgMusic = new Audio("Noelle_theme.mp3");
-    backgroundImg.src = "Noelle_bg.png";
-    topPipeImg.src = "noelle_top_pipe.png";
-    bottomPipeImg.src = "noelle_bottom_pipe.png";
-    document.getElementById("noelleGameOver").style.display = "none";
-  }
-  else {
+  } else {
     bgMusic = new Audio("Music.mp3");
     backgroundImg.src = "Background.png";
     topPipeImg.src = "tube2.png";
     bottomPipeImg.src = "tube.png";
-    document.getElementById("noelleGameOver").style.display = "none";
   }
   bgMusic.loop = true;
 
   const difficulty = document.getElementById("difficulty").value;
-  if(difficulty === "normal"){ pipeGap=0.45; pipeSpeed=3; pipeInterval=180; }
-  if(difficulty === "hard"){ pipeGap=0.35; pipeSpeed=3; pipeInterval=180; }
-  if(difficulty === "extreme"){ pipeGap=0.38; pipeSpeed=25; pipeInterval=45; }
-  if(difficulty === "impossible"){ pipeGap=0.38; pipeSpeed=25; pipeInterval=10; }
+  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 45; }
+  if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
 
-  document.getElementById("menu").style.display="none";
-  document.getElementById("creditBox").style.display="none";
-  document.getElementById("charPreviewBox").style.display="none";
-  document.getElementById("noelleGameOver").style.display="none";
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("creditBox").style.display = "none";
+  document.getElementById("charPreviewBox").style.display = "none";
 
   resetGame();
   if(!isMuted) bgMusic.play();
-  gameInterval=setInterval(update,20);
+  gameInterval = setInterval(update, 20);
 
-  document.addEventListener("keydown", function(event){
-    if(event.code==="Space"){ event.preventDefault(); flap(); }
-    if(event.code==="KeyF"){ showHitboxes=!showHitboxes; }
+  document.addEventListener("keydown", function(event) {
+    if (event.code === "Space") { event.preventDefault(); flap(); }
+    if (event.code === "KeyF") { showHitboxes = !showHitboxes; }
   });
   canvas.addEventListener("click", flap);
 }
 
 document.getElementById("muteBtn").addEventListener("click", ()=>{
-  isMuted=!isMuted;
+  isMuted = !isMuted;
   if(isMuted) bgMusic.pause();
   else if(!isGameOver) bgMusic.play();
 });
 
 document.getElementById("playAgainBtn").addEventListener("click", ()=>{
-  document.getElementById("playAgainBtn").style.display="none";
-  document.getElementById("menu").style.display="flex";
-  document.getElementById("creditBox").style.display="flex";
-  document.getElementById("charPreviewBox").style.display="block";
-  document.getElementById("noelleGameOver").style.display="none";
+  document.getElementById("playAgainBtn").style.display = "none";
+  document.getElementById("menu").style.display = "flex";
+  document.getElementById("creditBox").style.display = "flex";
+  document.getElementById("charPreviewBox").style.display = "block";
 });
 
 function resetGame(){
-  bird.y=canvas.height*0.25;
-  bird.velocity=0;
-  pipes=[]; score=0; frame=0; isGameOver=false;
+  bird.y = canvas.height * 0.25;
+  bird.velocity = 0;
+  pipes = [];
+  score = 0;
+  frame = 0;
+  isGameOver = false;
 }
 
 function flap(){
   if(!isGameOver){
-    bird.velocity=bird.lift;
-    flapSound.currentTime=0; flapSound.play();
+    bird.velocity = bird.lift;
+    flapSound.currentTime = 0;
+    flapSound.play();
   }
 }
 
-function drawBird(){
-  ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height);
+function drawBird(){ 
+  ctx.drawImage(characterImg, bird.x, bird.y, bird.width, bird.height); 
   if(showHitboxes){
-    ctx.strokeStyle="green"; ctx.lineWidth=2;
-    ctx.strokeRect(bird.x,bird.y,bird.width,bird.height);
+    ctx.strokeStyle = "green"; ctx.lineWidth = 2;
+    ctx.strokeRect(bird.x, bird.y, bird.width, bird.height);
   }
 }
 
-function drawPipes(){
-  pipes.forEach(pipe=>{
+function drawPipes(){ 
+  pipes.forEach(pipe => {
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
-    ctx.drawImage(bottomPipeImg, pipe.x, canvas.height-pipe.bottom, pipe.width, pipe.bottom);
+    ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
 
-    if((score+1)%10===0 && !pipe.scored){
-      ctx.fillStyle="rgba(255,255,0,0.4)";
-      ctx.fillRect(pipe.x,0,pipe.width,pipe.top);
-      ctx.fillRect(pipe.x,canvas.height-pipe.bottom,pipe.width,pipe.bottom);
+    // Tint upcoming 10th pipe yellow
+    if((score + 1) % 10 === 0 && !pipe.scored){
+      ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
+      ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+      ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
     }
+
     if(showHitboxes){
-      ctx.strokeStyle="blue"; ctx.lineWidth=2;
-      ctx.strokeRect(pipe.x,0,pipe.width,pipe.top);
-      ctx.strokeRect(pipe.x,canvas.height-pipe.bottom,pipe.width,pipe.bottom);
+      ctx.strokeStyle = "blue"; ctx.lineWidth = 2;
+      ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
+      ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
     }
   });
 }
 
 function drawScore(){
-  const char=document.getElementById("character").value;
-  const isSpecial=(char==="Roaring.png" || char==="Noelle.png");
-  ctx.fillStyle=isSpecial ? "white":"black";
-  ctx.font=`${Math.floor(canvas.width*0.05)}px sans-serif`;
-  ctx.fillText("Score: "+score,10,canvas.height*0.15);
-  ctx.font=`${Math.floor(canvas.width*0.035)}px sans-serif`;
-  ctx.fillText("High Score: "+highScore,10,canvas.height*0.15+40);
+  const isRoaring = document.getElementById("character").value === "Roaring.png";
+  ctx.fillStyle = isRoaring ? "white" : "black";
+  ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
+  ctx.fillText("Score: " + score, 10, canvas.height * 0.15);
+  ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
+  ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.15 + 40);
 }
 
 function update(){
@@ -292,44 +356,36 @@ function update(){
   ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 
   if(!isGameOver){
-    // gravity
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
 
-    // pipe movement
-    pipes.forEach(pipe => { pipe.x -= pipeSpeed; });
+    if(bird.y + bird.height > canvas.height || bird.y < -25){
+      hitSound.currentTime = 0; hitSound.play(); triggerGameOver();
+    }
 
-    // pipe spawning
     if(frame % pipeInterval === 0){
-      let top = Math.random()*(canvas.height*pipeGap);
-      let bottom = canvas.height - top - canvas.height*pipeGap;
-      pipes.push({ x: canvas.width, top: top, bottom: bottom, width: 60, scored: false });
+      let topHeight = Math.random() * (canvas.height - pipeGap*canvas.height - 100) + 50;
+      pipes.push({ x: canvas.width, width: canvas.width * 0.12, top: topHeight, bottom: canvas.height - topHeight - pipeGap*canvas.height, scored: false });
     }
 
-    // pipe removal
-    if(pipes.length > 0 && pipes[0].x + pipes[0].width < 0){ pipes.shift(); }
-
-    // collisions
     pipes.forEach(pipe => {
-      if(bird.x + bird.width > pipe.x && bird.x < pipe.x + pipe.width &&
-        (bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom)){
-          endGame();
+      pipe.x -= pipeSpeed;
+      if(bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x){
+        if(bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom){
+          hitSound.currentTime = 0; hitSound.play(); triggerGameOver();
         }
-    });
-
-    // floor / ceiling
-    if(bird.y + bird.height > canvas.height || bird.y < 0){
-      endGame();
-    }
-
-    // scoring
-    pipes.forEach(pipe => {
-      if(!pipe.scored && pipe.x + pipe.width < bird.x){
+      }
+      if(!pipe.scored && bird.x > pipe.x + pipe.width){
         score++;
         pipe.scored = true;
-        if(score % 10 === 0){ pipeSpeed += 1; }
+
+        if(score % 10 === 0){
+          pipeSpeed += 0.5;
+        }
       }
     });
+
+    pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
   }
 
   drawPipes();
@@ -337,28 +393,13 @@ function update(){
   drawScore();
 
   if(isGameOver){
-    const character = document.getElementById("character").value;
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    const imgWidth = canvas.width * 0.6;
+    const imgHeight = imgWidth * (gameOverImg.height / gameOverImg.width || 0.5);
+    ctx.drawImage(gameOverImg, (canvas.width - imgWidth)/2, canvas.height*0.3 - imgHeight/2, imgWidth, imgHeight);
 
-    if(character === "Noelle.png"){
-      // Show animated Noelle game over gif on top of canvas
-      const gif = document.getElementById("noelleGameOver");
-      gif.style.display = "block";
-      gif.style.position = "absolute";
-      gif.style.left = "50%";
-      gif.style.top = "40%";
-      gif.style.transform = "translate(-50%, -50%)";
-      gif.style.width = (canvas.width * 0.4) + "px";  // smaller now
-      gif.style.height = "auto"; // keep aspect ratio
-    } else {
-      // normal game over PNG
-      ctx.fillStyle = "rgba(0,0,0,0.5)";
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      const imgWidth = canvas.width * 0.6;
-      const imgHeight = imgWidth * (gameOverImg.height / gameOverImg.width || 0.5);
-      ctx.drawImage(gameOverImg, (canvas.width - imgWidth)/2, canvas.height*0.3 - imgHeight/2, imgWidth, imgHeight);
-    }
-
-    ctx.fillStyle = "white";
+    ctx.fillStyle = document.getElementById("character").value === "Roaring.png" ? "white" : "white";
     ctx.font = `${Math.floor(canvas.width*0.05)}px sans-serif`;
     ctx.fillText("Final Score: " + score, canvas.width*0.25, canvas.height*0.75);
 
@@ -368,18 +409,17 @@ function update(){
   frame++;
 }
 
-
 function triggerGameOver(){
-  if(isGameOver)return;
-  isGameOver=true; clearInterval(gameInterval);
+  if(isGameOver) return;
+  isGameOver = true;
+  clearInterval(gameInterval);
   bgMusic.pause();
-  if(score>highScore){ highScore=score; localStorage.setItem("highScore",highScore); }
+  if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
 }
 
-document.getElementById("character").addEventListener("change", e=>{
-  document.getElementById("charPreview").src=e.target.value;
+document.getElementById("character").addEventListener("change", (e)=>{
+  document.getElementById("charPreview").src = e.target.value;
 });
 </script>
 </body>
 </html>
-
