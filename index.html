@@ -7,7 +7,137 @@
 <style>
   body { margin: 0; overflow: hidden; font-family: 'Poppins', sans-serif; background: #f0f2f5; }
   #gameCanvas { display: block; background: linear-gradient(to bottom, #87ceeb, #f0f2f5); }
-  /* menu, buttons, and overlay styles remain unchanged */
+
+  #menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffffee;
+    padding: 30px 40px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 2;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #menu h1 {
+    margin: 0 0 25px;
+    font-size: 50px;
+    color: #333;
+    animation: float 2s ease-in-out infinite;
+    letter-spacing: 2px;
+  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+  #menu label { font-size: 18px; font-weight: 500; display: block; margin-bottom: 4px; color: #555; }
+  select, button {
+    margin-top: 5px;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  select:focus, button:focus { box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.3); }
+  button { background: #6495ED; color: #fff; border: none; }
+  button:hover { background: #4176d6; }
+
+  #muteBtn, #playAgainBtn {
+    position: absolute;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 3;
+    transition: all 0.2s ease-in-out;
+  }
+  #muteBtn { bottom: 20px; left: 20px; }
+  #muteBtn:hover { background: #e0e0e0; }
+
+  #playAgainBtn { bottom: 80px; left: 50%; transform: translateX(-50%); display: none; background: #ff4c4c; color: white; }
+  #playAgainBtn:hover { background: #e04343; }
+
+  #hitboxText {
+    position: absolute; bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px; color: #333; z-index: 2;
+    background: rgba(255,255,255,0.8); padding: 5px 12px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  #creditBox {
+    position: absolute; left: 20px; top: 50%;
+    transform: translateY(-50%);
+    width: 120px; aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    font-size: 14px; text-align: center; color: #333;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 2;
+  }
+
+  #charPreviewBox {
+    margin-top: 10px;
+    display: block;
+  }
+
+  #charPreviewBox img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid #ccc;
+    background: white;
+  }
+
+  #changesBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 26px;
+    padding: 10px 14px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 4;
+  }
+  #changesOverlay {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 9999;
+    display: none;
+    max-width: 90%;
+    font-size: 16px;
+  }
+  #changesOverlay button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #ff4c4c;
+    color: white;
+  }
 </style>
 </head>
 <body>
@@ -29,7 +159,6 @@
     <option value="Osaka.png">Osaka</option>
     <option value="Shrek.png">Shrek</option>
     <option value="Yoshi.png">Yoshi</option>
-    <option value="Flappybird.png">Flappy Bird</option>
   </select>
 
   <div id="charPreviewBox">
@@ -38,7 +167,7 @@
 
   <label>Select Difficulty</label>
   <select id="difficulty">
-    <option value="baby mode">Baby Mode</option>
+    <option value="normal">Normal</option>
     <option value="hard">Hard</option>
     <option value="extreme">Extreme</option>
     <option value="impossible">Literally Impossible</option>
@@ -57,15 +186,23 @@
 <div id="changesOverlay">
   <strong>Current Update Changes:</strong>
   <ul>
- <li>Removed Noelle Character</li>
- <li>Decreased "<b>Expert</b>" and "<b>Literally Impossible</b>" Pipe Gap by <b>0.02</b></li>
- <li>Always Updating Static Leaderboard! (Stop asking me only you can ask sarue too)</li>
- <li>Renamed "<b>Normal</b>" to "<b>Baby Mode</b>"</li>
+    <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
+    <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
+    <li>Flap power is now 9.25.</li>
+    <li>Press F to toggle hitbox borders.</li>
+    <li>Made "Literally Impossible" Slightly Possible.</li>
+    <li>NEW CHARACTERS: Baldi, Shrek, Osaka, And Yoshi</li>
+    <li>Increased Pipe Gap by 0.5`</li>
   </ul>
   <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
 
 <script>
+document.getElementById('changesBtn').addEventListener('click', ()=>{
+  const overlay = document.getElementById('changesOverlay');
+  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+});
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -81,22 +218,17 @@ let bgMusic;
 
 let bird = { x: 0, y: 0, width: 0, height: 0, gravity: 0, lift: 0, velocity: 0 };
 let pipes = [];
+let score = 0;
+let highScore = parseInt(localStorage.getItem("highScore")) || 0;
 let frame = 0;
 let gameInterval;
 let isGameOver = false;
 let isMuted = false;
 let showHitboxes = true;
-let pipeGap = 0.4;
-let pipeSpeed = 3;
-let pipeInterval = 180;
 
-// protected score variable
-let _score = 0;
-Object.defineProperty(window, 'score', {
-  get() { return _score; },
-  set(value) { /* ignore direct assignment */ }
-});
-let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+let pipeGap = 0.4; 
+let pipeSpeed = 3; 
+let pipeInterval = 180;
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
@@ -123,25 +255,17 @@ function startGame(){
     bottomPipeImg.src = "roaring_bottom_pipe.png";
   } else {
     bgMusic = new Audio("Music.mp3");
-    bgMusic.loop = true;
-
-    // Web Audio API for extreme loudness
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const track = audioCtx.createMediaElementSource(bgMusic);
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.value = 5; // 5× louder than normal
-    track.connect(gainNode).connect(audioCtx.destination);
-
     backgroundImg.src = "Background.png";
     topPipeImg.src = "tube2.png";
     bottomPipeImg.src = "tube.png";
   }
+  bgMusic.loop = true;
 
   const difficulty = document.getElementById("difficulty").value;
-  if(difficulty === "baby mode") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 18; pipeInterval = 90; }
-  if(difficulty === "extreme") { pipeGap = 0.38; pipeSpeed = 25; pipeInterval = 45; }
-  if(difficulty === "impossible") { pipeGap = 0.38; pipeSpeed = 25; pipeInterval = 10; }
+  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 3; pipeInterval = 180; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 45; }
+  if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("creditBox").style.display = "none";
@@ -158,11 +282,24 @@ function startGame(){
   canvas.addEventListener("click", flap);
 }
 
+document.getElementById("muteBtn").addEventListener("click", ()=>{
+  isMuted = !isMuted;
+  if(isMuted) bgMusic.pause();
+  else if(!isGameOver) bgMusic.play();
+});
+
+document.getElementById("playAgainBtn").addEventListener("click", ()=>{
+  document.getElementById("playAgainBtn").style.display = "none";
+  document.getElementById("menu").style.display = "flex";
+  document.getElementById("creditBox").style.display = "flex";
+  document.getElementById("charPreviewBox").style.display = "block";
+});
+
 function resetGame(){
   bird.y = canvas.height * 0.25;
   bird.velocity = 0;
   pipes = [];
-  _score = 0;
+  score = 0;
   frame = 0;
   isGameOver = false;
 }
@@ -187,11 +324,14 @@ function drawPipes(){
   pipes.forEach(pipe => {
     ctx.drawImage(topPipeImg, pipe.x, 0, pipe.width, pipe.top);
     ctx.drawImage(bottomPipeImg, pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
-    if(( _score + 1) % 10 === 0 && !pipe.scored){
+
+    // Tint upcoming 10th pipe yellow
+    if((score + 1) % 10 === 0 && !pipe.scored){
       ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
       ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
       ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
     }
+
     if(showHitboxes){
       ctx.strokeStyle = "blue"; ctx.lineWidth = 2;
       ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top); 
@@ -204,7 +344,7 @@ function drawScore(){
   const isRoaring = document.getElementById("character").value === "Roaring.png";
   ctx.fillStyle = isRoaring ? "white" : "black";
   ctx.font = `${Math.floor(canvas.width * 0.05)}px sans-serif`;
-  ctx.fillText("Score: " + _score, 10, canvas.height * 0.15);
+  ctx.fillText("Score: " + score, 10, canvas.height * 0.15);
   ctx.font = `${Math.floor(canvas.width * 0.035)}px sans-serif`;
   ctx.fillText("High Score: " + highScore, 10, canvas.height * 0.15 + 40);
 }
@@ -234,9 +374,12 @@ function update(){
         }
       }
       if(!pipe.scored && bird.x > pipe.x + pipe.width){
-        _score++;
+        score++;
         pipe.scored = true;
-        if(_score % 10 === 0) pipeSpeed += 0.5;
+
+        if(score % 10 === 0){
+          pipeSpeed += 0.5;
+        }
       }
     });
 
@@ -256,7 +399,7 @@ function update(){
 
     ctx.fillStyle = document.getElementById("character").value === "Roaring.png" ? "white" : "white";
     ctx.font = `${Math.floor(canvas.width*0.05)}px sans-serif`;
-    ctx.fillText("Final Score: " + _score, canvas.width*0.25, canvas.height*0.75);
+    ctx.fillText("Final Score: " + score, canvas.width*0.25, canvas.height*0.75);
 
     document.getElementById("playAgainBtn").style.display = "block";
   }
@@ -269,34 +412,20 @@ function triggerGameOver(){
   isGameOver = true;
   clearInterval(gameInterval);
   bgMusic.pause();
-  if(_score > highScore) { highScore = _score; localStorage.setItem("highScore", highScore); }
+  if(score > highScore) { highScore = score; localStorage.setItem("highScore", highScore); }
 }
-
-document.getElementById("muteBtn").addEventListener("click", ()=>{
-  isMuted = !isMuted;
-  if(isMuted) bgMusic.pause();
-  else if(!isGameOver) bgMusic.play();
-});
-
-document.getElementById("playAgainBtn").addEventListener("click", ()=>{
-  document.getElementById("playAgainBtn").style.display = "none";
-  document.getElementById("menu").style.display = "flex";
-  document.getElementById("creditBox").style.display = "flex";
-  document.getElementById("charPreviewBox").style.display = "block";
-});
 
 document.getElementById("character").addEventListener("change", (e)=>{
   document.getElementById("charPreview").src = e.target.value;
 });
 
-// Anti-cheat: block console manipulation
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => { if(e.key==='F12') e.preventDefault(); });
-setInterval(()=>{
-  if(window.outerWidth-window.innerWidth>100 || window.outerHeight-window.innerHeight>100){
-    location.reload();
-  }
-}, 2000);
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
