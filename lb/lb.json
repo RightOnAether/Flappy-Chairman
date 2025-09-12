@@ -16,12 +16,13 @@
   ],
   "Literally Impossible": [
     { "name": "Sam", "score": 14 },
+    { "name": "Eugene", "score": 13 },
     { "name": "Sarue", "score": 12 },
+    { "name": "Talla", "score": 11 },
     { "name": "Rolando", "score": 11 },
     { "name": "Somethin", "score": 11 },
+    { "name": "Louis", "score": 10 },
     { "name": "Naim", "score": 10 },
-    { "name": "Eugene", "score": 10 },
-    { "name": "Taz", "score": 7 },
-    { "name": "Talla", "score": 5 }
+    { "name": "Taz", "score": 7 }
   ]
 }
