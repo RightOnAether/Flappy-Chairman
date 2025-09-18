@@ -122,7 +122,7 @@
   </style>
 </head>
 <body>
-  <h1>Flappy Chairman Leaderboards</h1>
+  <h1>Flappy Chairman Leaderboard</h1>
   
   <div id="leaderboards"></div>
   
@@ -186,7 +186,148 @@
     setInterval(fetchLeaderboard, 10000);
   </script>
 
-  <h2>Got a score you want on the leaderboard? Talk to someone who knows someone that can add it for you!</h2>
+<div id="previous-podium">
+  <h2 style="margin:2px;;">Original Leaderboard Champions </h2>
+  <p style="padding-bottom:20px;">(#1 Place Holders Of The Leaderboard Pre - 9.18.25)</p>
+  <div class="podium">
+    <div class="podium-spot first">
+      <span class="name">Somethin'</span>
+      <span class="diff">Impossible</span>
+      <span class="score">18 pts</span>
+    </div>
+    <div class="podium-spot second">
+      <span class="name">McLovin</span>
+      <span class="diff">Extreme</span>
+      <span class="score">151 pts</span>
+    </div>
+    <div class="podium-spot third">
+      <span class="name">Somethin'</span>
+      <span class="diff">Hard</span>
+      <span class="score">120 pts</span>
+    </div>
+    <div class="podium-spot fourth">
+      <span class="name">Gnarp (S.R)</span>
+      <span class="diff">Normal</span>
+      <span class="score">264 pts</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  #previous-podium {
+    margin: 60px auto;
+    padding: 20px;
+    width: 85%;
+    max-width: 900px;
+    background: #151515;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+
+  #previous-podium h2 {
+    color: #e6e6e6;
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 1.7rem;
+  }
+
+  .podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 25px;
+    flex-wrap: wrap;
+  }
+
+  .podium-spot {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    padding: 18px 14px;
+    border-radius: 10px;
+    background: linear-gradient(120deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+    background-size: 200% 200%;
+    animation: silverShimmer 5s infinite linear;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .podium-spot:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+  }
+
+  .podium-spot span.name {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .podium-spot span.diff {
+    display: block;
+    font-size: 0.95rem;
+    color: #bcbcbc;
+    margin-bottom: 4px;
+  }
+
+  .podium-spot span.score {
+    font-size: 0.85rem;
+    color: #999;
+  }
+
+  /* Podium heights */
+  .first { height: 160px; }
+  .second { height: 140px; }
+  .third { height: 120px; }
+  .fourth { height: 100px; }
+
+  /* Podium colors */
+  .first span.name { color: #ffd700; }   /* Gold */
+  .second span.name { color: #c0c0c0; }  /* Silver */
+  .third span.name { color: #b87333; }   /* Bronze */
+  .fourth span.name { color: #aaaaaa; }  /* Grey */
+
+  /* First place sparkles */
+  .first::before,
+  .first::after {
+    content: "✦";
+    position: absolute;
+    color: #fffacd;
+    font-size: 0.8em;
+    opacity: 0;
+    animation: twinkle 2.2s infinite ease-in-out;
+  }
+  .first::before { top: -0.6em; left: -0.8em; animation-delay: 0.2s; }
+  .first::after { top: -0.6em; right: -0.8em; animation-delay: 1s; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.3) rotate(20deg); }
+  }
+
+  /* Silver shimmer (all spots) */
+  @keyframes silverShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  /* Responsive stacking */
+  @media (max-width: 650px) {
+    .podium {
+      flex-direction: column;
+      align-items: center;
+    }
+    .podium-spot {
+      width: 90%;
+      max-width: 320px;
+      height: auto;
+      margin-bottom: 15px;
+    }
+  }
+</style>
+
   <h2>（￣︶￣）↗　</h2>
 </body>
 </html>
