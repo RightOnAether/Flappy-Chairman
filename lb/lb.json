@@ -1,32 +1,14 @@
 {
   "Baby Mode": [
-    { "name": "Gnarp (S.R)", "score": 264 },
-    { "name": "Somethin", "score": 72 },
-    { "name": "Sam", "score": 31 }
+    { "name": "Nobody", "score": 00 },
   ],
   "Hard": [
-    { "name": "Somethin", "score": 120 },
-    { "name": "BA", "score": 86 }
+    { "name": "Nobody", "score": 00 },
   ],
   "Extreme": [
-    { "name": "Mclovin", "score": 151 },
-    { "name": "Aether", "score": 126 },
-    { "name": "Sam", "score": 106 },
-    { "name": "Somethin", "score": 96 },
-    { "name": "Talla", "score": 55 },
-    { "name": "Sarue", "score": 38 }
+    { "name": "McLovin", "score": 69 },
   ],
   "Literally Impossible": [
-    { "name": "Sam", "score": 25 },
-    { "name": "Rolando", "score": 23 },
-    { "name": "Somethin", "score": 18 },
-    { "name": "Eugene", "score": 13 },
-    { "name": "Sarue", "score": 12 },
-    { "name": "Phillip", "score": 12 },
-    { "name": "Izzy", "score": 12 },
-    { "name": "Talla", "score": 11 },
-    { "name": "Louis", "score": 10 },
-    { "name": "Naim", "score": 10 },
-    { "name": "Taz", "score": 7 }
+    { "name": "Nobody", "score": 00 },
   ]
 }
