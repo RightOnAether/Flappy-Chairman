@@ -61,6 +61,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     z-index: 3;
     transition: all 0.2s ease-in-out;
+    border: 1px solid #232323; /* <-- shorthand that actually makes a border */
   }
   #muteBtn { bottom: 20px; left: 20px; }
   #muteBtn:hover { background: #e0e0e0; }
@@ -102,42 +103,60 @@
     background: white;
   }
 
-  #changesBtn {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    font-size: 26px;
-    padding: 10px 14px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    background: rgba(255,255,255,0.9);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 4;
-  }
-  #changesOverlay {
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.9);
-    color: white;
-    padding: 20px;
-    border-radius: 12px;
-    z-index: 9999;
-    display: none;
-    max-width: 90%;
-    font-size: 16px;
-  }
-  #changesOverlay button {
-    margin-top: 10px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: #ff4c4c;
-    color: white;
-  }
+#changesBtn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+
+  width: 60px;
+  height: 60px;
+  
+  font-size: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 4;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #232323; /* <-- shorthand that actually makes a border */
+}
+
+
+#changesOverlay {
+  position: fixed;
+  top: 50%;  
+  left: 50%;
+  transform: translate(-50%, -50%); /* true center */
+  
+  background: rgba(20, 20, 20, 0.85); /* slightly transparent */
+  color: #f5f5f5;
+  
+  padding: 30px 40px; /* more breathing room */
+  border-radius: 16px;
+  z-index: 9999;
+  display: none;
+  
+  width: 80%;          /* wider modal */
+  max-width: 700px;    /* don’t stretch too much */
+  font-size: 18px;     /* easier to read */
+  line-height: 1.6;    /* better spacing for text */
+  
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4); /* soft shadow for depth */
+  backdrop-filter: blur(8px); /* frosted glass effect */
+  animation: fadeIn 0.3s ease-out; /* smooth pop-in */
+}
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -48%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
 </style>
 </head>
 <body>
@@ -176,25 +195,22 @@
 </div>
 
 <div id="hitboxText">Want a challenge? Press F to hide Hitboxes!</div>
-<div id="creditBox">Idea by Aether<br>Made by AI</div>
+<div id="creditBox">Made by Aether</div>
 
-<button id="muteBtn">Mute</button>
+<button id="muteBtn" style="color: black">Mute</button>
 <button id="playAgainBtn">Play Again</button>
 <canvas id="gameCanvas"></canvas>
 
 <button id="changesBtn">📜</button>
 <div id="changesOverlay">
+  <h2 style="margin-top: 0; margin-bottom: 0.5;">QoL tweaks and fixes!!</h2>
   <strong>Current Update Changes:</strong>
   <ul>
-    <li>Score, High Score, and Final Score turn white when Roaring Knight is selected.</li>
-    <li>Every 10th pipe is now tinted yellow to indicate an upcoming speed increase.</li>
-    <li>Flap power is now 9.25.</li>
-    <li>Press F to toggle hitbox borders.</li>
-    <li>Made "Literally Impossible" Slightly Possible.</li>
-    <li>NEW CHARACTERS: Baldi, Shrek, Osaka, And Yoshi</li>
-    <li>Increased Pipe Gap by 0.5`</li>
+    <li> <a href="https://rightonaether.github.io/Flappy-Chairman/lb/lb.html" style="color: #6495ED;">Leaderboard has been officially added（￣︶￣）↗</a></li>
+    <li>Normal Mode (Baby Mode) has been made <b>much</b> faster ＼(ﾟｰﾟ＼)</li>
+    <li>Shortened pipe intervals in hard mode and made <b>much</b> faster (￣o￣) . z Z</li>
+    <li>UI fixes ￣へ￣</li>
   </ul>
-  <button onclick="document.getElementById('changesOverlay').style.display='none'">Close</button>
 </div>
 
 <script>
@@ -236,13 +252,26 @@ function resizeCanvas(){
   bird.width = canvas.width * 0.06;
   bird.height = bird.width;
   bird.x = canvas.width * 0.15;
-  bird.gravity = 0.5 * (canvas.height/600);
+  bird.gravity = 0.55  * (canvas.height/600);
   bird.lift = -9.25 * (canvas.height/600);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
+let gone = false;
+
+const StopHitBoxPopup = () => { 
+    if (!gone) { 
+        const playButton = document.getElementById("hitboxText");
+        if (playButton) {
+            playButton.remove();
+            gone = true;
+        }
+    }
+};
+
 function startGame(){
+  StopHitBoxPopup()
   const character = document.getElementById("character").value;
   characterImg.src = character;
 
@@ -262,9 +291,9 @@ function startGame(){
   bgMusic.loop = true;
 
   const difficulty = document.getElementById("difficulty").value;
-  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 3; pipeInterval = 180; }
-  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 45; }
+  if(difficulty === "normal") { pipeGap = 0.45; pipeSpeed = 20; pipeInterval = 50; }
+  if(difficulty === "hard") { pipeGap = 0.35; pipeSpeed = 28; pipeInterval = 50; }
+  if(difficulty === "extreme") { pipeGap = 0.4; pipeSpeed = 35; pipeInterval = 45; }
   if(difficulty === "impossible") { pipeGap = 0.4; pipeSpeed = 25; pipeInterval = 10; }
 
   document.getElementById("menu").style.display = "none";
