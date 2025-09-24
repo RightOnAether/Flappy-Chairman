@@ -1,6 +1,7 @@
 {
   "Baby Mode": [
-    { "name": "Talla", "score": 97 }
+    { "name": "Talla", "score": 97 },
+    { "name": "Sarue", "score": 67 }
   ],
   "Hard": [
     { "name": "Nobody", "score": 0 }
@@ -9,6 +10,7 @@
     { "name": "McLovin", "score": 69 }
   ],
   "Literally Impossible": [
+    { "name": "Andy'", "score": 12 },
     { "name": "Somethin'", "score": 8 }
   ]
 }
