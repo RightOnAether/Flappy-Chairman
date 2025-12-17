@@ -7,3 +7,4 @@
 ![issues-∞](https://img.shields.io/badge/issues-%E2%88%9E-black?style=flat&logo=github)
 ![Contributors](https://img.shields.io/github/contributors/RightOnAether/Flappy-Chairman?style=flat)
 ![Commit activity](https://img.shields.io/github/commit-activity/y/RightOnAether/Flappy-Chairman?style=flat)
+google link [Link Text](https://google.com)
